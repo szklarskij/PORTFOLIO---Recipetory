@@ -6,7 +6,9 @@ export default {
   namespaced: true,
   state() {
     return {
-      searchString: "345",
+      searchString: "",
+      searchList: [],
+      isSearchingListLoading: false
     };
   },
   mutations,
