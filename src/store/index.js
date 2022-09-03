@@ -1,16 +1,16 @@
 import { createStore } from "vuex";
 
+import searchModule from "./modules/search/index.js";
+
 const store = createStore({
-  // modules: {
-  //   coaches: coachesModule,
-  //   requests: requestsModule,
-  //   auth: authModule,
-  // },
-  // state() {
-  //   return {
-  //     userId: 'c3',
-  //   };
-  // },
+  modules: {
+    search: searchModule,
+  },
+  state() {
+    return {
+      searchString: "123",
+    };
+  },
 });
 
 export default store;

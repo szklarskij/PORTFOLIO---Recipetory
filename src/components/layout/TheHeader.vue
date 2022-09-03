@@ -3,10 +3,12 @@
     <nav>
       <h1><router-link to="/">G recipes</router-link></h1>
       <div class="search-container">
-        <form>
-          <input type="text" />
+        <form @submit.prevent="submitSearch">
+          <input type="text" v-model="searchInput" />
         </form>
-        <base-button mode="flat">Search for recipe</base-button>
+        <base-button @click="submitSearch" mode="flat"
+          >Search for recipe</base-button
+        >
       </div>
       <ul>
         <li>
@@ -22,6 +24,27 @@
     </nav>
   </header>
 </template>
+
+<script>
+import { useStore } from "vuex";
+import { ref } from "vue";
+
+export default {
+  setup() {
+    const store = useStore();
+
+    //get search string
+    const searchInput = ref("");
+    let searchString = "";
+    const submitSearch = function () {
+      searchString = searchInput.value;
+      store.dispatch("search/setSearchString", searchString);
+    };
+
+    return { searchInput, submitSearch };
+  },
+};
+</script>
 
 <style>
 header {
