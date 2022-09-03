@@ -8,6 +8,9 @@ export default {
   isError(state) {
     return state.error;
   },
+  getSearchList(state) {
+    return state.searchList;
+  },
   recipesLoaded(state) {
     if (state.searchList.length === 0) {
       return false;

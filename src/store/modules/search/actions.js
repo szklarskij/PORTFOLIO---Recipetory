@@ -31,7 +31,6 @@ export default {
         label: item.recipe.label,
         image: item.recipe.image,
         source: item.recipe.source,
-        ingredients: item.recipe.ingredientLines,
       };
       recipeArr.push(recipe);
     });
