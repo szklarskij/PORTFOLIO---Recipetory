@@ -8,7 +8,8 @@ export default {
     return {
       searchString: "",
       searchList: [],
-      isSearchingListLoading: false
+      isSearchingListLoading: false,
+      error: null,
     };
   },
   mutations,

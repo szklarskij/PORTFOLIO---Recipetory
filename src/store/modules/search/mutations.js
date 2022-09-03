@@ -11,4 +11,7 @@ export default {
   spinnerOff(state) {
     state.isSearchingListLoading = false;
   },
+  setError(state, payload) {
+    state.error = payload;
+  },
 };

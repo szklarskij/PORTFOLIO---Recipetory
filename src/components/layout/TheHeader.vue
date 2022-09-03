@@ -4,7 +4,7 @@
       <h1><router-link to="/">G recipes</router-link></h1>
       <div class="search-container">
         <form @submit.prevent="submitSearch">
-          <input type="text" v-model="searchInput" />
+          <input type="text" v-model.trim="searchInput" />
         </form>
         <base-button @click="submitSearch" mode="flat"
           >Search for recipe</base-button
@@ -28,17 +28,46 @@
 <script>
 import { useStore } from "vuex";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+// import { useRoute } from "vue-router";
 
 export default {
   setup() {
+    // const route = useRoute();
+    // onMounted(function () {
+    //   return console.log(route.params.query);
+    // });
+    // const routeParam = computed(function)
     const store = useStore();
+    const router = useRouter();
+
+    // console.log(router.currentRoute.path);
 
     //get search string
     const searchInput = ref("");
     let searchString = "";
-    const submitSearch = function () {
-      searchString = searchInput.value;
-      store.dispatch("search/setSearchString", searchString);
+    const submitSearch = async function () {
+      router.push("/search" + "/" + searchInput.value);
+      store.dispatch("search/resetSearchList");
+
+      if (!validateInput(searchInput.value)) return;
+
+      try {
+        searchString = searchInput.value;
+        await store.dispatch("search/setSearchString", searchString);
+      } catch (error) {
+        store.dispatch("search/setError", error);
+      }
+      store.dispatch("search/spinnerOff");
+    };
+
+    const validateInput = function (string) {
+      if (string.length < 3) {
+        store.dispatch("search/setError", "Please input at least 3 characters");
+        return false;
+      } else {
+        return true;
+      }
     };
 
     return { searchInput, submitSearch };

@@ -36,6 +36,14 @@ export default {
       recipeArr.push(recipe);
     });
     context.commit("setSearchList", recipeArr);
+  },
+  setError(context, payload) {
+    context.commit("setError", payload);
+  },
+  spinnerOff(context) {
     context.commit("spinnerOff");
+  },
+  resetSearchList(context) {
+    context.commit("setSearchList", []);
   },
 };
