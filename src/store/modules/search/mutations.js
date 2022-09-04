@@ -14,4 +14,13 @@ export default {
   setError(state, payload) {
     state.error = payload;
   },
+  setSearchingPage(state, payload) {
+    state.searchPage = payload;
+  },
+  setPaginationStatus(state, payload) {
+    state.paginationStatus = payload;
+  },
+  setSearchListResults(state, payload) {
+    state.searchListResults = payload;
+  },
 };

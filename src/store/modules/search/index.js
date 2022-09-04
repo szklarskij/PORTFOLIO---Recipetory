@@ -10,6 +10,10 @@ export default {
       searchList: [],
       isSearchingListLoading: false,
       error: null,
+      searchPage: 1,
+      resultsPerPage: 10,
+      paginationStatus: null,
+      searchListResults: [],
     };
   },
   mutations,

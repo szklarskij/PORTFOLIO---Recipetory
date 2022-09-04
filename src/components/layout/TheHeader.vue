@@ -50,6 +50,7 @@ export default {
     };
     const submitSearch = async function () {
       store.dispatch("search/resetSearchList");
+      store.dispatch("search/resetSearchList");
 
       router.push("/search" + "/" + searchInput.value);
     };

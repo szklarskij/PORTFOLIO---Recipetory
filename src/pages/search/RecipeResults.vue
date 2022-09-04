@@ -27,6 +27,27 @@
             :source="recipe.source"
           ></recipe-item>
         </ul>
+        <div class="pagination">
+          <div class="prev-btn">
+            <base-button
+              @click="prevPage"
+              mode="outline"
+              v-if="prevButtonVisible"
+              >Previous</base-button
+            >
+          </div>
+          <p v-if="prevButtonVisible || nextButtonVisible">
+            {{ currPageShow }}/{{ numOfPagesShow }}
+          </p>
+          <div class="next-btn">
+            <base-button
+              @click="nextPage"
+              mode="outline"
+              v-if="nextButtonVisible"
+              >Next</base-button
+            >
+          </div>
+        </div>
       </div>
     </base-container>
   </section>
@@ -54,10 +75,6 @@ export default {
       return store.getters["search/isSearchingListLoading"];
     });
 
-    //////////////////// show list
-    const recipes = computed(function () {
-      return store.getters["search/getSearchList"];
-    });
     //////////////////// fetch
 
     const fetch = async function () {
@@ -86,7 +103,6 @@ export default {
     watch(
       () => route.params.query,
       () => {
-        console.log("route change");
         fetch();
       }
     );
@@ -100,6 +116,81 @@ export default {
       store.dispatch("search/setError", null);
     };
 
+    ///////////////////// paginacja;
+
+    let numOfPages = null;
+    const currPageShow = computed(function () {
+      return store.getters["search/getSearchPage"];
+    });
+    const numOfPagesShow = computed(function () {
+      return numOfPages;
+    });
+    const getSearchResultPage = function (page = 1) {
+      const results = store.getters["search/getSearchList"];
+      const resultsPerPage = store.getters["search/getResultsPerPage"];
+      // console.log(store.getters["search/getSearchList"]);
+
+      store.dispatch("search/setSearchingPage", page);
+      const start = (page - 1) * resultsPerPage; //// przeniesc do configa
+      const end = page * resultsPerPage;
+      ///buttons
+      const numPages = Math.ceil(results.length / resultsPerPage);
+      numOfPages = numPages;
+      store.dispatch("search/setSearchListResults", results.slice(start, end));
+      //strona 1 i więcej stron
+      console.log(numPages);
+      if (page === 1 && numPages > 1) {
+        store.dispatch("search/setPaginationStatus", "moreThan1Pages");
+      }
+
+      //ostatnia strona
+      else if (page === numPages && numPages !== 1) {
+        console.log("ostatnia strona");
+        store.dispatch("search/setPaginationStatus", "lastPage");
+      }
+      //inne strony
+      else if (page < numPages) {
+        store.dispatch("search/setPaginationStatus", "otherPages");
+      }
+      //tylko strona 1
+      else {
+        console.log("tylko 1 s");
+        store.dispatch("search/setPaginationStatus", "onePage");
+      }
+      return store.getters["search/getSearchListResults"];
+    };
+    // const resultsOnPages = computed(function () {
+    //   console.log(store.getters["search/getSearchListResults"]);
+    //   return store.getters["search/getSearchListResults"];
+    // });
+    //////////////////// pag buttons
+    const prevButtonVisible = computed(function () {
+      const status = store.getters["search/getPaginationStatus"];
+
+      if (status === "lastPage" || status === "otherPage") {
+        return true;
+      } else return false;
+    });
+    const nextButtonVisible = computed(function () {
+      const status = store.getters["search/getPaginationStatus"];
+      if (status === "moreThan1Pages" || status === "otherPages") {
+        return true;
+      } else return false;
+    });
+    //////////////////// pag buttons zmiana strony
+    const nextPage = function () {
+      const page = store.getters["search/getSearchPage"];
+      store.dispatch("search/setSearchingPage", page + 1);
+    };
+    const prevPage = function () {
+      const page = store.getters["search/getSearchPage"];
+      store.dispatch("search/setSearchingPage", page - 1);
+    };
+    ////////////////// show list
+    const recipes = computed(function () {
+      const page = store.getters["search/getSearchPage"];
+      return getSearchResultPage(page);
+    });
     return {
       recipesLoaded,
       searchString,
@@ -108,7 +199,25 @@ export default {
       isError,
       handleError,
       recipes,
+      prevButtonVisible,
+      nextButtonVisible,
+      nextPage,
+      prevPage,
+      currPageShow,
+      numOfPagesShow,
     };
   },
 };
 </script>
+<style scoped>
+.pagination {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.next-btn {
+  margin: auto 0 auto auto;
+}
+p {
+  justify-self: center;
+}
+</style>

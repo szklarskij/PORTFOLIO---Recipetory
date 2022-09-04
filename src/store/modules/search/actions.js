@@ -14,15 +14,6 @@ export default {
       method: "GET",
     });
     const data = await response.json();
-    console.log(data);
-    // const recipe = data.hits.map((item) => {
-    //   ({
-    //     label: item.recipe.label,
-    //     image: item.recipe.image,
-    //     source: item.recipe.source,
-    //     ingredients: item.recipe.ingredientLines,
-    //   });
-    // });
 
     let recipeArr = [];
 
@@ -34,6 +25,7 @@ export default {
       };
       recipeArr.push(recipe);
     });
+
     context.commit("setSearchList", recipeArr);
   },
   setError(context, payload) {
@@ -44,5 +36,15 @@ export default {
   },
   resetSearchList(context) {
     context.commit("setSearchList", []);
+  },
+  setSearchingPage(context, payload) {
+    context.commit("setSearchingPage", payload);
+  },
+  setPaginationStatus(context, payload) {
+    context.commit("setPaginationStatus", payload);
+  },
+  setSearchListResults(context, payload) {
+    // console.log(payload);
+    context.commit("setSearchListResults", payload);
   },
 };

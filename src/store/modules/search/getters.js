@@ -18,4 +18,16 @@ export default {
       return true;
     }
   },
+  getSearchPage(state) {
+    return state.searchPage;
+  },
+  getResultsPerPage(state) {
+    return state.resultsPerPage;
+  },
+  getPaginationStatus(state) {
+    return state.paginationStatus;
+  },
+  getSearchListResults(state) {
+    return state.searchListResults;
+  },
 };
