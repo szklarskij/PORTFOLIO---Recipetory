@@ -17,7 +17,8 @@
       </div>
       <div v-else>
         <h2>Recipes has been found!</h2>
-        <p>Showing resoults of "{{ searchString }}"</p>
+        <p>Showing results of "{{ searchString }}"</p>
+        <recipe-sort></recipe-sort>
         <ul>
           <recipe-item
             v-for="recipe in recipes"
@@ -55,13 +56,16 @@
 <script>
 import { computed, watch } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import RecipeItem from "../../components/search/RecipeItem.vue";
+import RecipeSort from "../../components/search/RecipeSort.vue";
 
 export default {
-  components: { RecipeItem },
+  components: { RecipeItem, RecipeSort },
   setup() {
     const route = useRoute();
+    const router = useRouter();
+
     const store = useStore();
 
     const searchString = computed(function () {
@@ -74,18 +78,42 @@ export default {
     const isLoading = computed(function () {
       return store.getters["search/isSearchingListLoading"];
     });
+    //////////////////// set params on load
+    const setParamsOnLoad = function () {
+      const query = route.params.query;
+      //recipe
+      const recipeQuery = route.params.query.slice(0, query.indexOf("&"));
 
+      store.dispatch("search/setSearchString", recipeQuery);
+      //page
+      const pageQuery = route.params.query.slice(query.indexOf("&") + 1);
+      const page = pageQuery.slice(
+        pageQuery.indexOf("=") + 1,
+        pageQuery.indexOf("=") + 2
+      );
+      if (+page) store.dispatch("search/setSearchingPage", +page);
+      //sorting
+      const sortQuery = route.params.query.slice(query.indexOf("$") + 1);
+      const sort = Array.from(
+        sortQuery.slice(sortQuery.indexOf("=") + 1, sortQuery.indexOf("=") + 3)
+      );
+      store.dispatch("search/setSortParams", sort);
+
+      store.dispatch("search/generateSearchUrl");
+    };
     //////////////////// fetch
 
     const fetch = async function () {
       //validacja
-      if (!validateInput(route.params.query)) {
+      const query = route.params.query.split("&")[0];
+
+      if (!validateInput(query)) {
         return;
       }
       //fetch
       try {
-        const searchString = route.params.query;
-        await store.dispatch("search/setSearchString", searchString);
+        const searchString = query;
+        await store.dispatch("search/fetchString", searchString);
       } catch (error) {
         store.dispatch("search/setError", error);
       }
@@ -101,13 +129,14 @@ export default {
       }
     };
     watch(
-      () => route.params.query,
+      () => route.params.query.split("&")[0],
       () => {
+        // const query = route.params.query.split("&")[0];
         fetch();
       }
     );
+    setParamsOnLoad();
     fetch();
-
     /// errors
     const isError = computed(function () {
       return store.getters["search/isError"];
@@ -136,16 +165,18 @@ export default {
       ///buttons
       const numPages = Math.ceil(results.length / resultsPerPage);
       numOfPages = numPages;
+      if (numOfPages < store.getters["search/getSearchPage"]) {
+        router.push("/*");
+      }
+
       store.dispatch("search/setSearchListResults", results.slice(start, end));
       //strona 1 i więcej stron
-      console.log(numPages);
       if (page === 1 && numPages > 1) {
         store.dispatch("search/setPaginationStatus", "moreThan1Pages");
       }
 
       //ostatnia strona
       else if (page === numPages && numPages !== 1) {
-        console.log("ostatnia strona");
         store.dispatch("search/setPaginationStatus", "lastPage");
       }
       //inne strony
@@ -154,15 +185,19 @@ export default {
       }
       //tylko strona 1
       else {
-        console.log("tylko 1 s");
         store.dispatch("search/setPaginationStatus", "onePage");
       }
       return store.getters["search/getSearchListResults"];
     };
-    // const resultsOnPages = computed(function () {
-    //   console.log(store.getters["search/getSearchListResults"]);
-    //   return store.getters["search/getSearchListResults"];
-    // });
+    ////////////////////sprawdz czy zła strona
+
+    // watch(
+    //   () => store.getters["search/getSearchPage"],
+    //   () => {
+    //     // const query = route.params.query.split("&")[0];
+    //     console.log("jest");
+    //   }
+    // );
     //////////////////// pag buttons
     const prevButtonVisible = computed(function () {
       const status = store.getters["search/getPaginationStatus"];
@@ -181,11 +216,14 @@ export default {
     const nextPage = function () {
       const page = store.getters["search/getSearchPage"];
       store.dispatch("search/setSearchingPage", page + 1);
+      store.dispatch("search/generateSearchUrl");
     };
     const prevPage = function () {
       const page = store.getters["search/getSearchPage"];
       store.dispatch("search/setSearchingPage", page - 1);
+      store.dispatch("search/generateSearchUrl");
     };
+
     ////////////////// show list
     const recipes = computed(function () {
       const page = store.getters["search/getSearchPage"];

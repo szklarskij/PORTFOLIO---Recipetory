@@ -14,6 +14,9 @@ export default {
       resultsPerPage: 10,
       paginationStatus: null,
       searchListResults: [],
+      searchListUnsorted: [],
+      sortOption: "none",
+      sortType: null,
     };
   },
   mutations,

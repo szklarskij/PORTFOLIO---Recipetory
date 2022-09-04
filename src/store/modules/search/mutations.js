@@ -1,6 +1,7 @@
 export default {
   setSearchString(state, payload) {
     state.searchString = payload;
+    state.searchListUnsorted = payload;
   },
   setSearchList(state, payload) {
     state.searchList = payload;
@@ -22,5 +23,9 @@ export default {
   },
   setSearchListResults(state, payload) {
     state.searchListResults = payload;
+  },
+  setSortParams(state, payload) {
+    state.sortOption = payload[0];
+    state.sortType = payload[1];
   },
 };

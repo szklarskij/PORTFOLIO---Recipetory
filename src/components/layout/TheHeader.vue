@@ -28,14 +28,14 @@
 <script>
 import { useStore } from "vuex";
 import { ref, watch } from "vue";
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 
 export default {
   setup() {
     const route = useRoute();
     const store = useStore();
-    const router = useRouter();
+    // const router = useRouter();
 
     // onMounted(function () {
     //   return console.log(route.params.query);
@@ -50,9 +50,11 @@ export default {
     };
     const submitSearch = async function () {
       store.dispatch("search/resetSearchList");
-      store.dispatch("search/resetSearchList");
 
-      router.push("/search" + "/" + searchInput.value);
+      store.dispatch("search/setSearchString", searchInput.value);
+      store.dispatch("search/generateSearchUrl");
+
+      // router.push("/search" + "/" + searchInput.value);
     };
 
     //reset input

@@ -11,6 +11,9 @@ export default {
   getSearchList(state) {
     return state.searchList;
   },
+  getSearchListUnsorted(state) {
+    return state.searchListUnsorted;
+  },
   recipesLoaded(state) {
     if (state.searchList.length === 0) {
       return false;
@@ -29,5 +32,11 @@ export default {
   },
   getSearchListResults(state) {
     return state.searchListResults;
+  },
+  getSortType(state) {
+    return state.sortType;
+  },
+  getSortOption(state) {
+    return state.sortOption;
   },
 };
