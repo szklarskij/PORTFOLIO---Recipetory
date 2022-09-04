@@ -32,6 +32,10 @@ export default {
       };
       recipeArr.push(recipe);
     });
+    // context.dispatch("sort", [
+    //   context.getters["search/getSortOption"],
+    //   context.getters["search/getSortType"],
+    // ]);
 
     context.commit("setSearchList", recipeArr);
   },
@@ -60,7 +64,6 @@ export default {
 
   generateSearchUrl(context) {
     const input = context.getters.searchString;
-    console.log(input);
     const page = context.getters.getSearchPage;
     const sortOption = context.getters.getSortOption.slice(0, 1);
     let sortType = context.getters.getSortType;

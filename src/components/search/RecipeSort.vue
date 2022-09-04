@@ -4,7 +4,6 @@
     <input
       type="radio"
       id="sortNone"
-      checked
       value="none"
       v-model="sortOption"
       @click="turnOffSort"
@@ -22,7 +21,6 @@
         type="radio"
         id="sortAscending"
         value="ascending"
-        checked
         v-model="sortType"
       />
       <label for="sortAscending">ascending</label>
@@ -44,6 +42,7 @@ export default {
     const store = useStore();
     const sortOption = ref(null);
     const sortType = ref(null);
+    sortOption.value = "none";
 
     const showType = computed(function () {
       if (!sortOption.value || sortOption.value === "none") {
@@ -53,12 +52,14 @@ export default {
       }
     });
     //option load
+
     const loadSortOption = store.getters["search/getSortOption"];
     if (loadSortOption && loadSortOption === "l") {
       sortOption.value = "label";
     } else if (loadSortOption && loadSortOption === "s") {
       sortOption.value = "source";
     }
+    console.log(sortOption.value);
     //type load
 
     const loadSortType = store.getters["search/getSortType"];
