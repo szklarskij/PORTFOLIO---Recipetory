@@ -17,4 +17,18 @@ const router = createRouter({
     { path: "/:notFound(.*)", component: NotFound },
   ],
 });
+
+// router.beforeEach(function (to, from, next) {
+//   const fromQuery = from.params.query;
+//   const toQuery = to.params.query;
+//   if (fromQuery) {
+//     const checkFrom = fromQuery.substring(0, fromQuery.indexOf("&"));
+//     const checkTo = toQuery.substring(0, toQuery.indexOf("&"));
+//     console.log(checkFrom, checkTo);
+//     if (checkFrom === checkTo) {
+//       next("/search");
+//     }
+//   }
+//   next();
+// });
 export default router;

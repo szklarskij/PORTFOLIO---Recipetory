@@ -1,5 +1,6 @@
 <template>
   <div class="filters">
+    <p>Filters:</p>
     <div
       v-for="option in options"
       :id="option.label"
@@ -37,6 +38,13 @@ export default {
       store.dispatch("search/changeFilters", filtersArray);
       store.dispatch("search/generateSearchUrl");
     });
+    ///load
+    const loadFilters = store.getters["search/getFilters"].join(",");
+    if (loadFilters.includes("vegetarian")) options.value[0].checked = true;
+    if (loadFilters.includes("pescatarian")) options.value[1].checked = true;
+    if (loadFilters.includes("egg-free")) options.value[2].checked = true;
+    if (loadFilters.includes("alcohol-free")) options.value[3].checked = true;
+
     return { options };
   },
 };
@@ -44,5 +52,6 @@ export default {
 <style scoped>
 .filters {
   display: flex;
+  align-items: center;
 }
 </style>

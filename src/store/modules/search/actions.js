@@ -1,19 +1,15 @@
-// import { EDAMAM_ID } from "../../../config.js";
-
 import router from "@/router";
 
-// import { useRoute, useRouter } from "vue-router";
 export default {
   setSearchString(context, payload) {
-    context.commit("setSearchString", payload);
+    context.commit("setSearchString", payload.toLowerCase());
   },
 
   async fetchString(context) {
-    // context.commit("setSearchString", payload);
     const searchString = context.getters.searchString;
-    context.commit("spinnerOn");
 
     //fetch
+    context.commit("spinnerOn");
 
     let url = `https://api.edamam.com/api/recipes/v2?type=public&q=${searchString}&app_id=f71a3a7b&app_key=5f2135c7e0a7cb360b90cd46b9437971`;
 
@@ -51,9 +47,8 @@ export default {
       };
 
       recipeArr.push(recipe);
-      // unsortedRecipeArr.push(recipe);
     });
-    context.commit("clearInput");
+
     context.commit("setSearchList", recipeArr);
     context.commit("setUnsortedList", unsortedRecipeArr);
   },
@@ -73,7 +68,6 @@ export default {
     context.commit("setPaginationStatus", payload);
   },
   setSearchListResults(context, payload) {
-    // console.log(payload);
     context.commit("setSearchListResults", payload);
   },
   setSearchListToUnsorted(context) {
@@ -93,7 +87,6 @@ export default {
       sortType = context.getters.getSortType.slice(0, 1);
     }
     const filters = context.getters.getFilters;
-    console.log(filters);
 
     let charArr = [];
     filters.forEach((f) => {
@@ -102,7 +95,7 @@ export default {
     });
     const filterParam = charArr.join("");
 
-    const url = `/search/${input}&p=${page}$s=${sortOption}${sortType}#${filterParam}`;
+    const url = `/search/${input}&p=${page}$s=${sortOption}${sortType}!${filterParam}`;
     router.push(url);
   },
   /////////////////sort
@@ -113,7 +106,6 @@ export default {
     context.commit("setSortParams", payload);
     const sortOption = payload[0];
     const sortType = payload[1];
-    // const unsorted = context.getters.getSearchListUnsorted;
 
     const recipeArr = context.getters.getSearchList;
     if (sortOption === "label") {
@@ -143,19 +135,12 @@ export default {
         })
       );
     }
-    // console.log("genrating on sort");
+
     context.dispatch("generateSearchUrl");
   },
   // filters
   changeFilters(context, payload) {
     context.commit("changeFilters", payload);
-    // const filters = payload;
-    // let recipeArr = context.getters.getSearchList;
-    // console.log(recipeArr);
-    // recipeArr.filter((recipe) => {
-    //   recipe.label.length > 1;
-    // });
-    // console.log(recipeArr);
   },
 
   setNumberOfPages(context, payload) {

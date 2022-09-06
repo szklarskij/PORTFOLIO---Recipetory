@@ -31,7 +31,6 @@
         v-model="sortType"
       />
       <label for="sortDescending">descending order</label>
-      <button @click="test">a</button>
     </div>
   </div>
 </template>
@@ -40,9 +39,6 @@ import { ref, computed, watch } from "vue";
 import { useStore } from "vuex";
 export default {
   setup() {
-    const test = function () {
-      store.dispatch("search/sort", [sortOption.value, sortType.value]);
-    };
     const store = useStore();
     const sortOption = ref(null);
     const sortType = ref(null);
@@ -89,7 +85,7 @@ export default {
     });
 
     store.dispatch("search/sort", [sortOption.value, sortType.value]);
-    return { sortOption, sortType, showType, turnOffSort, test };
+    return { sortOption, sortType, showType, turnOffSort };
   },
 };
 </script>

@@ -1,12 +1,5 @@
 <template>
   <section>
-    <base-dialog
-      :show="!!isError"
-      title="An error occured!"
-      @close="handleError"
-    >
-      <p>{{ isError }}</p>
-    </base-dialog>
     <div v-if="isLoading">
       <base-spinner></base-spinner>
     </div>
@@ -20,10 +13,11 @@
         <p>Showing results of "{{ searchString }}"</p>
         <recipe-sort></recipe-sort>
         <recipe-filters></recipe-filters>
+        <button @click="test">test</button>
         <ul>
           <recipe-item
             v-for="recipe in recipes"
-            :key="recipe.label"
+            :key="recipe.label + recipe.source"
             :label="recipe.label"
             :image="recipe.image"
             :source="recipe.source"
@@ -62,11 +56,16 @@ import { useRoute, useRouter } from "vue-router";
 import RecipeItem from "../../components/search/RecipeItem.vue";
 import RecipeSort from "../../components/search/RecipeSort.vue";
 import RecipeFilters from "../../components/search/RecipeFilters.vue";
+import useValidateInput from "../../hooks/validateInput.js";
 
 export default {
   components: { RecipeItem, RecipeSort, RecipeFilters },
 
   setup() {
+    const test = function () {
+      setParamsOnLoad();
+    };
+
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
@@ -77,7 +76,6 @@ export default {
     const recipesLoaded = computed(function () {
       return store.getters["search/recipesLoaded"];
     });
-    /////
     const isLoading = computed(function () {
       return store.getters["search/isSearchingListLoading"];
     });
@@ -86,13 +84,16 @@ export default {
       const query = route.params.query;
       //recipe
       const recipeQuery = route.params.query.slice(0, query.indexOf("&"));
-
+      if (!useValidateInput(recipeQuery, store)) {
+        router.replace("/search");
+        return;
+      }
       store.dispatch("search/setSearchString", recipeQuery);
       //page
       const pageQuery = route.params.query.slice(query.indexOf("&") + 1);
       const page = pageQuery.slice(
         pageQuery.indexOf("=") + 1,
-        pageQuery.indexOf("=") + 2
+        pageQuery.indexOf("$")
       );
       if (+page) store.dispatch("search/setSearchingPage", +page);
       //sorting
@@ -101,40 +102,54 @@ export default {
         sortQuery.slice(sortQuery.indexOf("=") + 1, sortQuery.indexOf("=") + 3)
       );
       store.dispatch("search/setSortParams", sort);
+      //filters
 
-      // store.dispatch("search/generateSearchUrl");
+      const filterQuery = query.split("!")[1];
+
+      let filterArr = [];
+
+      if (filterQuery.includes("v")) filterArr.push("vegetarian");
+      if (filterQuery.includes("p")) filterArr.push("pescatarian");
+      if (filterQuery.includes("e")) filterArr.push("egg-free");
+      if (filterQuery.includes("a")) filterArr.push("alcohol-free");
+      if (filterQuery === "") {
+        return;
+      } else store.dispatch("search/changeFilters", filterArr);
     };
+
+    //////////////////// sprawdz parametry
+    // const routeParam = computed(function () {
+    //   console.log(router.currentRoute.value.fullPath);
+    //   return router.currentRoute.value.fullPath;
+    // });
+    // watch(routeParam, function () {
+    //   // console.log("change");
+    //   setParamsOnLoad();
+    //   // updateReactiveList(2);
+    // });
     //////////////////// fetch
 
     const fetch = async function () {
       //validacja
       const query = route.params.query.split("&")[0];
 
-      if (!validateInput(query)) {
-        return;
-      }
+      // if (!validateInput(query)) {
+      //   return;
+      // }
       //fetch
       try {
         const searchString = query;
         await store.dispatch("search/fetchString", searchString);
       } catch (error) {
         store.dispatch("search/setError", error);
+        // console.log(error);
       }
       store.dispatch("search/spinnerOff");
     };
 
-    const validateInput = function (string) {
-      if (string.length < 3) {
-        store.dispatch("search/setError", "Please input at least 3 characters");
-        return false;
-      } else {
-        return true;
-      }
-    };
-
     setParamsOnLoad();
     fetch();
-    ////////////////fetching gdy komponent załadowany
+    //////////////// fetching gdy komponent załadowany
     const checkForceFetch = computed(function () {
       return store.getters["search/checkForceFetch"];
     });
@@ -143,14 +158,7 @@ export default {
       fetch();
     });
 
-    const isError = computed(function () {
-      return store.getters["search/isError"];
-    });
-    const handleError = function () {
-      store.dispatch("search/setError", null);
-    };
-
-    ///////////////////// paginacja;
+    ///////////////////// paginacja
 
     const currPageShow = computed(function () {
       return store.getters["search/getSearchPage"];
@@ -158,11 +166,13 @@ export default {
     const numOfPagesShow = computed(function () {
       return store.getters["search/getNumberOfPages"];
     });
-    const setPagesAndFilter = function (page = 1) {
-      //filter
+    const updateReactiveList = function (page = 1, filt) {
+      ///////////////////// filter
+
+      let zeroMatches = false;
       let results = [];
       const searchL = store.getters["search/getSearchList"];
-      const filters = store.getters["search/getFilters"];
+      const filters = filt;
       if (filters.length > 0) {
         searchL.forEach((recipe) => {
           const filterPass = filters.every((filter) => {
@@ -170,9 +180,13 @@ export default {
           });
           if (filterPass) {
             results.push(recipe);
+          } else {
+            zeroMatches = true;
           }
         });
       } else results = store.getters["search/getSearchList"];
+
+      ///////////////////// rezultaty na stronach
       const resultsPerPage = store.getters["search/getResultsPerPage"];
 
       store.dispatch("search/setSearchingPage", page);
@@ -182,7 +196,7 @@ export default {
       const numPages = Math.ceil(results.length / resultsPerPage);
       store.dispatch("search/setNumberOfPages", numPages);
 
-      if (numPages < store.getters["search/getSearchPage"]) {
+      if (numPages < store.getters["search/getSearchPage"] && !zeroMatches) {
         router.push("/*");
       }
 
@@ -206,15 +220,6 @@ export default {
       }
       return store.getters["search/getSearchListResults"];
     };
-    ////////////////////sprawdz czy zła strona
-
-    // watch(
-    //   () => store.getters["search/getSearchPage"],
-    //   () => {
-    //     // const query = route.params.query.split("&")[0];
-    //     console.log("jest");
-    //   }
-    // );
     //////////////////// pag buttons
     const prevButtonVisible = computed(function () {
       const status = store.getters["search/getPaginationStatus"];
@@ -244,15 +249,15 @@ export default {
     ////////////////// show list
     const recipes = computed(function () {
       const page = store.getters["search/getSearchPage"];
-      return setPagesAndFilter(page);
+      const filters = store.getters["search/getFilters"];
+
+      return updateReactiveList(page, filters);
     });
     return {
       recipesLoaded,
       searchString,
       fetch,
       isLoading,
-      isError,
-      handleError,
       recipes,
       prevButtonVisible,
       nextButtonVisible,
@@ -260,6 +265,7 @@ export default {
       prevPage,
       currPageShow,
       numOfPagesShow,
+      test,
     };
   },
 };

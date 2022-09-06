@@ -51,4 +51,7 @@ export default {
   getNumberOfPages(state) {
     return state.numberOfPages;
   },
+  // getError(state) {
+  //   return state.error;
+  // },
 };

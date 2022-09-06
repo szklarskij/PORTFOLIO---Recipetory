@@ -1,5 +1,12 @@
 <template>
   <header>
+    <base-dialog
+      :show="!!isError"
+      title="An error occured!"
+      @close="handleError"
+    >
+      <p>{{ isError }}</p>
+    </base-dialog>
     <nav>
       <h1><router-link to="/" @click="clearInput">G recipes</router-link></h1>
       <div class="search-container">
@@ -27,7 +34,8 @@
 
 <script>
 import { useStore } from "vuex";
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import useValidateInput from "../../hooks/validateInput.js";
 
 export default {
   setup() {
@@ -35,15 +43,15 @@ export default {
 
     const searchInput = ref("");
 
-    const submitSearch = async function () {
-      store.dispatch("search/resetSearchList");
-
-      store.dispatch("search/setSearchString", searchInput.value);
-
-      store.dispatch("search/generateSearchUrl");
-      store.dispatch("search/forceFetch");
-      searchInput.value = "";
-      // router.push("/search" + "/" + searchInput.value);
+    const submitSearch = function () {
+      if (useValidateInput(searchInput.value, store)) {
+        store.dispatch("search/resetSearchList");
+        store.dispatch("search/setSearchingPage", 1);
+        store.dispatch("search/setSearchString", searchInput.value);
+        store.dispatch("search/generateSearchUrl");
+        store.dispatch("search/forceFetch");
+        searchInput.value = "";
+      }
     };
 
     //reset input
@@ -51,8 +59,18 @@ export default {
     const clearInput = function () {
       searchInput.value = "";
     };
+    //error
+    const isError = computed(function () {
+      return store.getters["search/isError"];
+    });
 
-    return { searchInput, submitSearch, clearInput };
+    const handleError = function () {
+      store.dispatch("search/setError", null);
+      clearInput();
+      // router.replace("/search");
+    };
+
+    return { searchInput, submitSearch, clearInput, isError, handleError };
   },
 };
 </script>
