@@ -165,23 +165,14 @@ export default {
       const filters = store.getters["search/getFilters"];
       if (filters.length > 0) {
         searchL.forEach((recipe) => {
-          filters.forEach((filter) => {
-            // console.log(recipe.healthLabels);
-            console.log(
-              recipe.healthLabels,
-              filter,
-              recipe.healthLabels.includes(filter)
-            );
-            if (
-              recipe.healthLabels.includes(filter) &&
-              !results.includes(recipe)
-            ) {
-              results.push(recipe);
-            }
+          const filterPass = filters.every((filter) => {
+            return recipe.healthLabels.includes(filter);
           });
+          if (filterPass) {
+            results.push(recipe);
+          }
         });
       } else results = store.getters["search/getSearchList"];
-      console.log(results);
       const resultsPerPage = store.getters["search/getResultsPerPage"];
 
       store.dispatch("search/setSearchingPage", page);

@@ -35,6 +35,7 @@ export default {
         }
       });
       store.dispatch("search/changeFilters", filtersArray);
+      store.dispatch("search/generateSearchUrl");
     });
     return { options };
   },

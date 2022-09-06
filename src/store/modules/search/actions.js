@@ -92,8 +92,17 @@ export default {
     } else {
       sortType = context.getters.getSortType.slice(0, 1);
     }
+    const filters = context.getters.getFilters;
+    console.log(filters);
 
-    const url = `/search/${input}&p=${page}$s=${sortOption}${sortType}`;
+    let charArr = [];
+    filters.forEach((f) => {
+      const char = f.slice(0, 1);
+      charArr.push(char);
+    });
+    const filterParam = charArr.join("");
+
+    const url = `/search/${input}&p=${page}$s=${sortOption}${sortType}#${filterParam}`;
     router.push(url);
   },
   /////////////////sort
