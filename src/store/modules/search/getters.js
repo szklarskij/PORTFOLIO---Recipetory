@@ -39,4 +39,16 @@ export default {
   getSortOption(state) {
     return state.sortOption;
   },
+  checkForceFetch(state) {
+    return state.forceFetch;
+  },
+  checkClearInput(state) {
+    return state.clearInput;
+  },
+  getFilters(state) {
+    return state.filters;
+  },
+  getNumberOfPages(state) {
+    return state.numberOfPages;
+  },
 };

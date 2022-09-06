@@ -1,10 +1,12 @@
 export default {
   setSearchString(state, payload) {
     state.searchString = payload;
-    state.searchListUnsorted = payload;
   },
   setSearchList(state, payload) {
     state.searchList = payload;
+  },
+  setUnsortedList(state, payload) {
+    state.searchListUnsorted = payload;
   },
   spinnerOn(state) {
     state.isSearchingListLoading = true;
@@ -27,5 +29,19 @@ export default {
   setSortParams(state, payload) {
     state.sortOption = payload[0];
     state.sortType = payload[1];
+  },
+  forceFetch(state) {
+    state.forceFetch++;
+    // console.log(state.forceFetch);
+  },
+  clearInput(state) {
+    state.clearInput = true;
+  },
+
+  changeFilters(state, payload) {
+    state.filters = payload;
+  },
+  setNumberOfPages(state, payload) {
+    state.numberOfPages = payload;
   },
 };

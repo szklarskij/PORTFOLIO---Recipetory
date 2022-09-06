@@ -31,6 +31,7 @@
         v-model="sortType"
       />
       <label for="sortDescending">descending order</label>
+      <button @click="test">a</button>
     </div>
   </div>
 </template>
@@ -39,6 +40,9 @@ import { ref, computed, watch } from "vue";
 import { useStore } from "vuex";
 export default {
   setup() {
+    const test = function () {
+      store.dispatch("search/sort", [sortOption.value, sortType.value]);
+    };
     const store = useStore();
     const sortOption = ref(null);
     const sortType = ref(null);
@@ -58,8 +62,10 @@ export default {
       sortOption.value = "label";
     } else if (loadSortOption && loadSortOption === "s") {
       sortOption.value = "source";
-    }
-    console.log(sortOption.value);
+    } else sortOption.value = "none";
+
+    //////////////////////////////// to mozna reusable i w action
+
     //type load
 
     const loadSortType = store.getters["search/getSortType"];
@@ -67,18 +73,23 @@ export default {
       sortType.value = "ascending";
     } else if (loadSortType && loadSortType === "d") {
       sortType.value = "descending";
-    }
-
+    } else sortType.value = null;
     const turnOffSort = function () {
-      sortType.value = null;
+      sortType.value = null; ////moze fix to 'none'
       // sortOption.value = null;
     };
-
+    //force sort
     watch([sortOption, sortType], function () {
       store.dispatch("search/sort", [sortOption.value, sortType.value]);
     });
+    //empty radio fix
+    watch(sortOption, function () {
+      if (!sortType.value) sortType.value = "ascending";
+      if (sortOption.value === "none") sortType.value = null;
+    });
 
-    return { sortOption, sortType, showType, turnOffSort };
+    store.dispatch("search/sort", [sortOption.value, sortType.value]);
+    return { sortOption, sortType, showType, turnOffSort, test };
   },
 };
 </script>

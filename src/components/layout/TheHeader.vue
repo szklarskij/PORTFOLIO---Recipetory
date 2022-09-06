@@ -27,43 +27,30 @@
 
 <script>
 import { useStore } from "vuex";
-import { ref, watch } from "vue";
-// import { useRouter } from "vue-router";
-import { useRoute } from "vue-router";
+import { ref } from "vue";
 
 export default {
   setup() {
-    const route = useRoute();
     const store = useStore();
-    // const router = useRouter();
 
-    // onMounted(function () {
-    //   return console.log(route.params.query);
-    // });
-    // const routeParam = computed(function)
-
-    //get search string
     const searchInput = ref("");
-    // let searchString = "";
-    const clearInput = function () {
-      searchInput.value = "";
-    };
+
     const submitSearch = async function () {
       store.dispatch("search/resetSearchList");
 
       store.dispatch("search/setSearchString", searchInput.value);
-      store.dispatch("search/generateSearchUrl");
 
+      store.dispatch("search/generateSearchUrl");
+      store.dispatch("search/forceFetch");
+      searchInput.value = "";
       // router.push("/search" + "/" + searchInput.value);
     };
 
     //reset input
-    watch(
-      () => route.params,
-      () => {
-        clearInput();
-      }
-    );
+
+    const clearInput = function () {
+      searchInput.value = "";
+    };
 
     return { searchInput, submitSearch, clearInput };
   },

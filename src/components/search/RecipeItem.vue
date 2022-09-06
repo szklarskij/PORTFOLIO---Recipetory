@@ -4,13 +4,31 @@
     <div>
       <h3>{{ label }}</h3>
       <p>By: {{ source }}</p>
-      <!-- <h3>{{ label }}</h3> -->
+      <base-badge
+        v-for="badge in badges"
+        :key="badge"
+        :type="badge"
+      ></base-badge>
     </div>
   </li>
 </template>
 <script>
+// import BaseBadge from "../ui/BaseBadge.vue";
+import { ref } from "vue";
 export default {
-  props: ["label", "image", "source"],
+  // components: { BaseBadge },
+  props: {
+    label: { type: String },
+    image: { type: String },
+    source: { type: String },
+    healthLabels: { type: Array },
+  },
+
+  setup(props) {
+    const badges = ref(props.healthLabels);
+
+    return { badges };
+  },
 };
 </script>
 <style scoped>

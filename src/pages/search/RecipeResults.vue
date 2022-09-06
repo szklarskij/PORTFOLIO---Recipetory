@@ -19,13 +19,15 @@
         <h2>Recipes has been found!</h2>
         <p>Showing results of "{{ searchString }}"</p>
         <recipe-sort></recipe-sort>
+        <recipe-filters></recipe-filters>
         <ul>
           <recipe-item
             v-for="recipe in recipes"
-            :key="recipe.id"
+            :key="recipe.label"
             :label="recipe.label"
             :image="recipe.image"
             :source="recipe.source"
+            :healthLabels="recipe.healthLabels"
           ></recipe-item>
         </ul>
         <div class="pagination">
@@ -59,13 +61,14 @@ import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import RecipeItem from "../../components/search/RecipeItem.vue";
 import RecipeSort from "../../components/search/RecipeSort.vue";
+import RecipeFilters from "../../components/search/RecipeFilters.vue";
 
 export default {
-  components: { RecipeItem, RecipeSort },
+  components: { RecipeItem, RecipeSort, RecipeFilters },
+
   setup() {
     const route = useRoute();
     const router = useRouter();
-
     const store = useStore();
 
     const searchString = computed(function () {
@@ -99,7 +102,7 @@ export default {
       );
       store.dispatch("search/setSortParams", sort);
 
-      store.dispatch("search/generateSearchUrl");
+      // store.dispatch("search/generateSearchUrl");
     };
     //////////////////// fetch
 
@@ -128,16 +131,18 @@ export default {
         return true;
       }
     };
-    watch(
-      () => route.params.query.split("&")[0],
-      () => {
-        // const query = route.params.query.split("&")[0];
-        fetch();
-      }
-    );
+
     setParamsOnLoad();
     fetch();
-    /// errors
+    ////////////////fetching gdy komponent załadowany
+    const checkForceFetch = computed(function () {
+      return store.getters["search/checkForceFetch"];
+    });
+
+    watch(checkForceFetch, function () {
+      fetch();
+    });
+
     const isError = computed(function () {
       return store.getters["search/isError"];
     });
@@ -147,25 +152,46 @@ export default {
 
     ///////////////////// paginacja;
 
-    let numOfPages = null;
     const currPageShow = computed(function () {
       return store.getters["search/getSearchPage"];
     });
     const numOfPagesShow = computed(function () {
-      return numOfPages;
+      return store.getters["search/getNumberOfPages"];
     });
-    const getSearchResultPage = function (page = 1) {
-      const results = store.getters["search/getSearchList"];
+    const setPagesAndFilter = function (page = 1) {
+      //filter
+      let results = [];
+      const searchL = store.getters["search/getSearchList"];
+      const filters = store.getters["search/getFilters"];
+      if (filters.length > 0) {
+        searchL.forEach((recipe) => {
+          filters.forEach((filter) => {
+            // console.log(recipe.healthLabels);
+            console.log(
+              recipe.healthLabels,
+              filter,
+              recipe.healthLabels.includes(filter)
+            );
+            if (
+              recipe.healthLabels.includes(filter) &&
+              !results.includes(recipe)
+            ) {
+              results.push(recipe);
+            }
+          });
+        });
+      } else results = store.getters["search/getSearchList"];
+      console.log(results);
       const resultsPerPage = store.getters["search/getResultsPerPage"];
-      // console.log(store.getters["search/getSearchList"]);
 
       store.dispatch("search/setSearchingPage", page);
       const start = (page - 1) * resultsPerPage; //// przeniesc do configa
       const end = page * resultsPerPage;
       ///buttons
       const numPages = Math.ceil(results.length / resultsPerPage);
-      numOfPages = numPages;
-      if (numOfPages < store.getters["search/getSearchPage"]) {
+      store.dispatch("search/setNumberOfPages", numPages);
+
+      if (numPages < store.getters["search/getSearchPage"]) {
         router.push("/*");
       }
 
@@ -202,7 +228,7 @@ export default {
     const prevButtonVisible = computed(function () {
       const status = store.getters["search/getPaginationStatus"];
 
-      if (status === "lastPage" || status === "otherPage") {
+      if (status === "lastPage" || status === "otherPages") {
         return true;
       } else return false;
     });
@@ -227,7 +253,7 @@ export default {
     ////////////////// show list
     const recipes = computed(function () {
       const page = store.getters["search/getSearchPage"];
-      return getSearchResultPage(page);
+      return setPagesAndFilter(page);
     });
     return {
       recipesLoaded,
