@@ -37,17 +37,13 @@
 <script>
 import { ref, computed, watch } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 export default {
-  // props: ["passSortSettings"],
   setup() {
-    // const passSortSettings = ref(props.passSortSettings);
-    // console.log(passSortSettings);
-
+    const router = useRouter();
     const store = useStore();
-    const sortOption = ref(null);
+    const sortOption = ref("none");
     const sortType = ref(null);
-    sortOption.value = "none";
-    // context.emit("sort-settings", [sortOption, sortType]);
     const showType = computed(function () {
       if (!sortOption.value || sortOption.value === "none") {
         return false;
@@ -56,40 +52,46 @@ export default {
       }
     });
 
-    //option load
-
-    const loadSortOption = store.getters["search/getSortOption"];
-    if (loadSortOption && loadSortOption === "l") {
-      sortOption.value = "label";
-    } else if (loadSortOption && loadSortOption === "s") {
-      sortOption.value = "source";
-    } else sortOption.value = "none";
-
-    //////////////////////////////// to mozna reusable i w action
-
-    //type load
-
-    const loadSortType = store.getters["search/getSortType"];
-    if (loadSortType && loadSortType === "a") {
-      sortType.value = "ascending";
-    } else if (loadSortType && loadSortType === "d") {
-      sortType.value = "descending";
-    } else sortType.value = null;
+    ///////////////////gdy bez sortowania
     const turnOffSort = function () {
       sortType.value = null; ////moze fix to 'none'
-      // sortOption.value = null;
     };
-    //force sort
+    ///////////////////force sort
     watch([sortOption, sortType], function () {
       store.dispatch("search/sort", [sortOption.value, sortType.value]);
     });
-    //empty radio fix
+    ///////////////////empty radio fix
     watch(sortOption, function () {
       if (!sortType.value) sortType.value = "ascending";
       if (sortOption.value === "none") sortType.value = null;
     });
 
-    store.dispatch("search/sort", [sortOption.value, sortType.value]);
+    // store.dispatch("search/sort", [sortOption.value, sortType.value]);
+
+    ///////////////////set on route change
+    const routeParam = computed(function () {
+      return router.currentRoute.value.fullPath;
+    });
+    watch(routeParam, function () {
+      loadSettings();
+    });
+    ///////////////////load settings
+    const loadSettings = function () {
+      const loadSortOption = store.getters["search/getSortOption"];
+      if (loadSortOption && loadSortOption === "l") {
+        sortOption.value = "label";
+      } else if (loadSortOption && loadSortOption === "s") {
+        sortOption.value = "source";
+      } else sortOption.value = "none";
+      const loadSortType = store.getters["search/getSortType"];
+      if (loadSortType && loadSortType === "a") {
+        sortType.value = "ascending";
+      } else if (loadSortType && loadSortType === "d") {
+        sortType.value = "descending";
+      } else sortType.value = null;
+    };
+    loadSettings();
+
     return { sortOption, sortType, showType, turnOffSort };
   },
 };

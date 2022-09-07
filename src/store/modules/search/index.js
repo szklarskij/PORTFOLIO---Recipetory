@@ -29,6 +29,7 @@ export default {
       forceFetch: 0,
       clearInput: false,
       filters: [],
+      test: "test1",
     };
   },
   mutations,

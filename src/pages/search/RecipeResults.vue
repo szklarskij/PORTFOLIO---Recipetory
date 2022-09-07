@@ -11,9 +11,8 @@
       <div v-else>
         <h2>Recipes has been found!</h2>
         <p>Showing results of "{{ searchString }}"</p>
-        <recipe-sort :passSortSettings="passSortSettings"></recipe-sort>
+        <recipe-sort></recipe-sort>
         <recipe-filters></recipe-filters>
-        <button @click="test">test</button>
         <ul>
           <recipe-item
             v-for="recipe in recipes"
@@ -62,10 +61,6 @@ export default {
   components: { RecipeItem, RecipeSort, RecipeFilters },
 
   setup() {
-    const test = function () {
-      store.dispatch("search/sort", ["label", "descending"]);
-    };
-
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
@@ -81,8 +76,8 @@ export default {
     });
     //////////////////// set params on load
     const setParamsOnLoad = function () {
-      console.log("load");
       const query = route.params.query;
+
       //recipe
       const recipeQuery = route.params.query.slice(0, query.indexOf("&"));
       if (!useValidateInput(recipeQuery, store)) {
@@ -105,7 +100,6 @@ export default {
       store.dispatch("search/setSortParams", sort);
       // store.dispatch("search/sort", sort);
       //filters
-
       const filterQuery = query.split("!")[1];
 
       let filterArr = [];
@@ -124,9 +118,7 @@ export default {
       return router.currentRoute.value.fullPath;
     });
     watch(routeParam, function () {
-      // console.log("change");
       setParamsOnLoad();
-      // updateReactiveList(2);
     });
     //////////////////// fetch
 
@@ -134,10 +126,6 @@ export default {
       //validacja
       const query = route.params.query.split("&")[0];
 
-      // if (!validateInput(query)) {
-      //   return;
-      // }
-      //fetch
       try {
         const searchString = query;
         await store.dispatch("search/fetchString", searchString);
@@ -254,9 +242,7 @@ export default {
 
       return updateReactiveList(page, filters);
     });
-    const passSortSettings = computed(function () {
-      return store.getters["search/getSortType"];
-    });
+
     return {
       recipesLoaded,
       searchString,
@@ -269,8 +255,6 @@ export default {
       prevPage,
       currPageShow,
       numOfPagesShow,
-      test,
-      passSortSettings,
     };
   },
 };

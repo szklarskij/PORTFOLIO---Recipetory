@@ -146,4 +146,8 @@ export default {
   setNumberOfPages(context, payload) {
     context.commit("setNumberOfPages", payload);
   },
+
+  setTest(context, payload) {
+    context.commit("setTest", payload);
+  },
 };

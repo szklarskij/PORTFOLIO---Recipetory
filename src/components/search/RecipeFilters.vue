@@ -7,7 +7,7 @@
       :label="option.label"
       :key="option.id"
     >
-      <input type="checkbox" v-model="option.checked" :value="option" />
+      <input type="checkbox" v-model="option.checked" :value="option.label" />
       <label
         ><base-badge :type="option.label">{{ option.label }}</base-badge></label
       >
@@ -15,22 +15,24 @@
   </div>
 </template>
 <script>
-import { ref, watch } from "vue";
+import { watch, computed, reactive } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 export default {
   setup() {
+    const router = useRouter();
     const store = useStore();
-    const options = ref([
-      { label: "vegetarian", id: "vegetarian", checked: false },
-      { label: "pescatarian", id: "pescatarian", checked: false },
-      { label: "egg-free", id: "egg-free", checked: false },
-      { label: "alcohol-free", id: "alcohol-free", checked: false },
+    const options = reactive([
+      reactive({ label: "vegetarian", id: "vegetarian", checked: false }),
+      reactive({ label: "pescatarian", id: "pescatarian", checked: false }),
+      reactive({ label: "egg-free", id: "egg-free", checked: false }),
+      reactive({ label: "alcohol-free", id: "alcohol-free", checked: false }),
     ]);
 
-    watch(options.value, function () {
+    watch(options, function () {
       let filtersArray = [];
       store.dispatch("search/setSearchingPage", 1);
-      options.value.forEach((opt) => {
+      options.forEach((opt) => {
         if (opt.checked) {
           filtersArray.push(opt.label);
         }
@@ -39,11 +41,24 @@ export default {
       store.dispatch("search/generateSearchUrl");
     });
     ///load
-    const loadFilters = store.getters["search/getFilters"].join(",");
-    if (loadFilters.includes("vegetarian")) options.value[0].checked = true;
-    if (loadFilters.includes("pescatarian")) options.value[1].checked = true;
-    if (loadFilters.includes("egg-free")) options.value[2].checked = true;
-    if (loadFilters.includes("alcohol-free")) options.value[3].checked = true;
+    const loadFilters = function () {
+      const filters = store.getters["search/getFilters"].join(",");
+      if (filters.includes("vegetarian")) options[0].checked = true;
+      if (filters.includes("pescatarian")) options[1].checked = true;
+      if (filters.includes("egg-free")) options[2].checked = true;
+      if (filters.includes("alcohol-free")) options[3].checked = true;
+    };
+    const routeParam = computed(function () {
+      return router.currentRoute.value.fullPath;
+    });
+    watch(routeParam, function () {
+      loadSettings();
+    });
+
+    const loadSettings = function () {
+      loadFilters();
+    };
+    loadFilters();
 
     return { options };
   },

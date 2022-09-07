@@ -44,4 +44,7 @@ export default {
   setNumberOfPages(state, payload) {
     state.numberOfPages = payload;
   },
+  setTest(state, payload) {
+    state.test = payload;
+  },
 };
