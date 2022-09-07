@@ -52,30 +52,31 @@ export default {
       }
     });
 
-    ///////////////////gdy bez sortowania
+    /////////////////////////////////////////////////////////////////////// when no sort
     const turnOffSort = function () {
-      sortType.value = null; ////moze fix to 'none'
+      sortType.value = null;
     };
-    ///////////////////force sort
+
+    /////////////////////////////////////////////////////////////////////// force sort
     watch([sortOption, sortType], function () {
       store.dispatch("search/sort", [sortOption.value, sortType.value]);
     });
-    ///////////////////empty radio fix
+
+    /////////////////////////////////////////////////////////////////////// empty radio fix
     watch(sortOption, function () {
       if (!sortType.value) sortType.value = "ascending";
       if (sortOption.value === "none") sortType.value = null;
     });
 
-    // store.dispatch("search/sort", [sortOption.value, sortType.value]);
-
-    ///////////////////set on route change
+    /////////////////////////////////////////////////////////////////////// set on route change
     const routeParam = computed(function () {
       return router.currentRoute.value.fullPath;
     });
     watch(routeParam, function () {
       loadSettings();
     });
-    ///////////////////load settings
+
+    /////////////////////////////////////////////////////////////////////// load settings
     const loadSettings = function () {
       const loadSortOption = store.getters["search/getSortOption"];
       if (loadSortOption && loadSortOption === "l") {
@@ -90,6 +91,7 @@ export default {
         sortType.value = "descending";
       } else sortType.value = null;
     };
+    /////////////////////////////////////////////////////////////////////// init
     loadSettings();
 
     return { sortOption, sortType, showType, turnOffSort };

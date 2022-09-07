@@ -74,7 +74,8 @@ export default {
     const isLoading = computed(function () {
       return store.getters["search/isSearchingListLoading"];
     });
-    //////////////////// set params on load
+
+    /////////////////////////////////////////////////////////////////////// set params on load
     const setParamsOnLoad = function () {
       const query = route.params.query;
 
@@ -85,6 +86,7 @@ export default {
         return;
       }
       store.dispatch("search/setSearchString", recipeQuery);
+
       //page
       const pageQuery = route.params.query.slice(query.indexOf("&") + 1);
       const page = pageQuery.slice(
@@ -92,13 +94,14 @@ export default {
         pageQuery.indexOf("$")
       );
       if (+page) store.dispatch("search/setSearchingPage", +page);
+
       //sorting
       const sortQuery = route.params.query.slice(query.indexOf("$") + 1);
       const sort = Array.from(
         sortQuery.slice(sortQuery.indexOf("=") + 1, sortQuery.indexOf("=") + 3)
       );
       store.dispatch("search/setSortParams", sort);
-      // store.dispatch("search/sort", sort);
+
       //filters
       const filterQuery = query.split("!")[1];
 
@@ -113,14 +116,15 @@ export default {
       } else store.dispatch("search/changeFilters", filterArr);
     };
 
-    //////////////////// sprawdz parametry
+    /////////////////////////////////////////////////////////////////////// set params on load
     const routeParam = computed(function () {
       return router.currentRoute.value.fullPath;
     });
     watch(routeParam, function () {
       setParamsOnLoad();
     });
-    //////////////////// fetch
+
+    /////////////////////////////////////////////////////////////////////// fetch
 
     const fetch = async function () {
       //validacja
@@ -131,14 +135,11 @@ export default {
         await store.dispatch("search/fetchString", searchString);
       } catch (error) {
         store.dispatch("search/setError", error);
-        // console.log(error);
       }
       store.dispatch("search/spinnerOff");
     };
 
-    setParamsOnLoad();
-    fetch();
-    //////////////// fetching gdy komponent załadowany
+    /////////////////////////////////////////////////////////////////////// fetch when component loaded
     const checkForceFetch = computed(function () {
       return store.getters["search/checkForceFetch"];
     });
@@ -147,7 +148,7 @@ export default {
       fetch();
     });
 
-    ///////////////////// paginacja
+    /////////////////////////////////////////////////////////////////////// pagination
 
     const currPageShow = computed(function () {
       return store.getters["search/getSearchPage"];
@@ -156,8 +157,7 @@ export default {
       return store.getters["search/getNumberOfPages"];
     });
     const updateReactiveList = function (page = 1, filt) {
-      ///////////////////// filter
-
+      // filter
       let zeroMatches = false;
       let results = [];
       const searchL = store.getters["search/getSearchList"];
@@ -175,7 +175,7 @@ export default {
         });
       } else results = store.getters["search/getSearchList"];
 
-      ///////////////////// rezultaty na stronach
+      /////////////////////////////////////////////////////////////////////// results on page
       const resultsPerPage = store.getters["search/getResultsPerPage"];
 
       store.dispatch("search/setSearchingPage", page);
@@ -190,26 +190,26 @@ export default {
       }
 
       store.dispatch("search/setSearchListResults", results.slice(start, end));
-      //strona 1 i więcej stron
+      //one page and more
       if (page === 1 && numPages > 1) {
         store.dispatch("search/setPaginationStatus", "moreThan1Pages");
       }
 
-      //ostatnia strona
+      //last page
       else if (page === numPages && numPages !== 1) {
         store.dispatch("search/setPaginationStatus", "lastPage");
       }
-      //inne strony
+      //other pages
       else if (page < numPages) {
         store.dispatch("search/setPaginationStatus", "otherPages");
       }
-      //tylko strona 1
+      //only one page
       else {
         store.dispatch("search/setPaginationStatus", "onePage");
       }
       return store.getters["search/getSearchListResults"];
     };
-    //////////////////// pag buttons
+    /////////////////////////////////////////////////////////////////////// pagination buttons
     const prevButtonVisible = computed(function () {
       const status = store.getters["search/getPaginationStatus"];
 
@@ -223,7 +223,7 @@ export default {
         return true;
       } else return false;
     });
-    //////////////////// pag buttons zmiana strony
+    // change pages
     const nextPage = function () {
       const page = store.getters["search/getSearchPage"];
       store.dispatch("search/setSearchingPage", page + 1);
@@ -235,13 +235,16 @@ export default {
       store.dispatch("search/generateSearchUrl");
     };
 
-    ////////////////// show list
+    /////////////////////////////////////////////////////////////////////// show list
     const recipes = computed(function () {
       const page = store.getters["search/getSearchPage"];
       const filters = store.getters["search/getFilters"];
 
       return updateReactiveList(page, filters);
     });
+    /////////////////////////////////////////////////////////////////////// init
+    setParamsOnLoad();
+    fetch();
 
     return {
       recipesLoaded,

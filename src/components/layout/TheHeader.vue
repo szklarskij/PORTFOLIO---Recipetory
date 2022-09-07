@@ -18,9 +18,9 @@
         >
       </div>
       <ul>
-        <!-- <li>
-          <router-link to="/search">Search</router-link>
-        </li> -->
+        <li>
+          <router-link to="/search/">Browse recipes</router-link>
+        </li>
         <li>
           <router-link to="/favourites">Favourites</router-link>
         </li>
@@ -40,7 +40,6 @@ import useValidateInput from "../../hooks/validateInput.js";
 export default {
   setup() {
     const store = useStore();
-    console.log(store.getters["search/getSearchSettings"]);
 
     const searchInput = ref("");
 
