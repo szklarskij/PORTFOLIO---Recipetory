@@ -6,6 +6,14 @@ export default {
   namespaced: true,
   state() {
     return {
+      searchSettings: {
+        searchString: "test",
+        searchPage: 1,
+        sortOption: "none",
+        sortType: null,
+        filters: [],
+      },
+
       searchString: "",
       searchList: [],
       searchListUnsorted: [],

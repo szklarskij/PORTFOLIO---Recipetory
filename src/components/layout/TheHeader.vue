@@ -40,6 +40,7 @@ import useValidateInput from "../../hooks/validateInput.js";
 export default {
   setup() {
     const store = useStore();
+    console.log(store.getters["search/getSearchSettings"]);
 
     const searchInput = ref("");
 

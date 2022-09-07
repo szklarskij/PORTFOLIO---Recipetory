@@ -38,12 +38,16 @@
 import { ref, computed, watch } from "vue";
 import { useStore } from "vuex";
 export default {
+  // props: ["passSortSettings"],
   setup() {
+    // const passSortSettings = ref(props.passSortSettings);
+    // console.log(passSortSettings);
+
     const store = useStore();
     const sortOption = ref(null);
     const sortType = ref(null);
     sortOption.value = "none";
-
+    // context.emit("sort-settings", [sortOption, sortType]);
     const showType = computed(function () {
       if (!sortOption.value || sortOption.value === "none") {
         return false;
@@ -51,6 +55,7 @@ export default {
         return true;
       }
     });
+
     //option load
 
     const loadSortOption = store.getters["search/getSortOption"];

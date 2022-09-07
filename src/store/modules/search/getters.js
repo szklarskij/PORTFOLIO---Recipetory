@@ -51,6 +51,10 @@ export default {
   getNumberOfPages(state) {
     return state.numberOfPages;
   },
+
+  getSearchSettings(state) {
+    return state.searchSettings;
+  },
   // getError(state) {
   //   return state.error;
   // },
