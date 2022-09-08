@@ -49,7 +49,7 @@
   </section>
 </template>
 <script>
-import { computed, watch } from "vue";
+import { computed, watch, onActivated, onDeactivated } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import RecipeItem from "../../components/search/RecipeItem.vue";
@@ -59,8 +59,25 @@ import useValidateInput from "../../hooks/validateInput.js";
 
 export default {
   components: { RecipeItem, RecipeSort, RecipeFilters },
-
+  name: "recipe-results",
   setup() {
+    // let activated = true;
+
+    // onBeforeRouteUpdate((to, from) => {
+    //   console.log("before router update", to, from);
+    // });
+
+    onActivated(function () {
+      // activated = true;
+      // console.log("onactivated", activated);
+    });
+
+    onDeactivated(function () {
+      // activated = false;
+      // console.log("deactivated");
+      // watchRoute();
+    });
+
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
@@ -77,6 +94,7 @@ export default {
 
     /////////////////////////////////////////////////////////////////////// set params on load
     const setParamsOnLoad = function () {
+      console.log("1 load ");
       const query = route.params.query;
 
       //recipe
@@ -100,34 +118,55 @@ export default {
       const sort = Array.from(
         sortQuery.slice(sortQuery.indexOf("=") + 1, sortQuery.indexOf("=") + 3)
       );
+      // console.log("3 load after push", sort);
       store.dispatch("search/setSortParams", sort);
 
-      //filters
-      const filterQuery = query.split("!")[1];
+      // //filters
+      // const filterQuery = query.split("!")[1];
 
-      let filterArr = [];
+      // let filterArr = [];
 
-      if (filterQuery.includes("v")) filterArr.push("vegetarian");
-      if (filterQuery.includes("p")) filterArr.push("pescatarian");
-      if (filterQuery.includes("e")) filterArr.push("egg-free");
-      if (filterQuery.includes("a")) filterArr.push("alcohol-free");
-      if (filterQuery === "") {
-        return;
-      } else store.dispatch("search/changeFilters", filterArr);
+      // if (filterQuery.includes("v")) filterArr.push("vegetarian");
+      // if (filterQuery.includes("p")) filterArr.push("pescatarian");
+      // if (filterQuery.includes("e")) filterArr.push("egg-free");
+      // if (filterQuery.includes("a")) filterArr.push("alcohol-free");
+      // store.dispatch("search/changeFilters", filterArr);
     };
 
     /////////////////////////////////////////////////////////////////////// set params on load
-    const routeParam = computed(function () {
-      return router.currentRoute.value.fullPath;
+    // const routeParam = computed(function () {
+    //   return route.params.query;
+    // });
+
+    // watch(
+    //   routeParam,
+    //   function () {
+    //     if (routeParam.value) {
+    //       console.log("setParams");
+    //       setParamsOnLoad();
+    //     }
+    //   },
+    //   { flush: "post" }
+    // );
+    const listChange = computed(function () {
+      return store.getters["search/getListChange"];
     });
-    watch(routeParam, function () {
-      setParamsOnLoad();
+
+    watch(listChange, function () {
+      // console.log("list update!!!!!!!!!!!!!!!!!!!");
+      // setParamsOnLoad();
     });
+
+    // onBeforeRouteUpdate(() => {
+    //   // console.log("onbeforeupdate");
+    //   setParamsOnLoad();
+    // });
 
     /////////////////////////////////////////////////////////////////////// fetch
 
     const fetch = async function () {
       //validacja
+      // console.log(route.params.query);
       const query = route.params.query.split("&")[0];
 
       try {
@@ -144,9 +183,13 @@ export default {
       return store.getters["search/checkForceFetch"];
     });
 
-    watch(checkForceFetch, function () {
-      fetch();
-    });
+    watch(
+      checkForceFetch,
+      function () {
+        fetch();
+      },
+      { flush: "post" }
+    );
 
     /////////////////////////////////////////////////////////////////////// pagination
 
@@ -203,6 +246,7 @@ export default {
       else if (page < numPages) {
         store.dispatch("search/setPaginationStatus", "otherPages");
       }
+
       //only one page
       else {
         store.dispatch("search/setPaginationStatus", "onePage");
@@ -230,6 +274,7 @@ export default {
       store.dispatch("search/generateSearchUrl");
     };
     const prevPage = function () {
+      router;
       const page = store.getters["search/getSearchPage"];
       store.dispatch("search/setSearchingPage", page - 1);
       store.dispatch("search/generateSearchUrl");
@@ -243,9 +288,12 @@ export default {
       return updateReactiveList(page, filters);
     });
     /////////////////////////////////////////////////////////////////////// init
+    // onActivated(function () {
+    //   console.log("activated and set params go");
+    // });
+
     setParamsOnLoad();
     fetch();
-
     return {
       recipesLoaded,
       searchString,

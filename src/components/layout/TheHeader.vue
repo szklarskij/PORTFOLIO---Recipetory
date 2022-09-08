@@ -45,6 +45,8 @@ export default {
 
     const submitSearch = function () {
       if (useValidateInput(searchInput.value, store)) {
+        // console.log();
+
         store.dispatch("search/resetSearchList");
         store.dispatch("search/setSearchingPage", 1);
         store.dispatch("search/setSearchString", searchInput.value);

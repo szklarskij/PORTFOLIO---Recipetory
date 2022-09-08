@@ -79,13 +79,12 @@ export default {
   generateSearchUrl(context) {
     const input = context.getters.searchString;
     const page = context.getters.getSearchPage;
-    const sortOption = context.getters.getSortOption.slice(0, 1);
+    const sortOption = context.getters.getSortOption;
     let sortType = context.getters.getSortType;
-    if (!sortType) {
-      sortType = "n";
-    } else {
-      sortType = context.getters.getSortType.slice(0, 1);
+    if (sortType === "n" && (sortOption === "l" || sortOption === "s")) {
+      sortType = "a";
     }
+
     const filters = context.getters.getFilters;
 
     let charArr = [];
@@ -96,7 +95,9 @@ export default {
     const filterParam = charArr.join("");
 
     const url = `/search/${input}&p=${page}$s=${sortOption}${sortType}!${filterParam}`;
+
     router.push(url);
+    console.log("2 generate url and push");
   },
   /////////////////sort
   setSortParams(context, payload) {
@@ -108,9 +109,9 @@ export default {
     const sortType = payload[1];
 
     const recipeArr = context.getters.getSearchList;
-    if (sortOption === "label") {
+    if (sortOption === "l") {
       //sprawdz order
-      if (sortType === "descending") {
+      if (sortType === "d") {
         recipeArr.sort((a, b) => b.label.localeCompare(a.label));
       } else {
         //
@@ -118,9 +119,9 @@ export default {
       }
     }
     ////////////////sort by source
-    else if (sortOption === "source") {
+    else if (sortOption === "s") {
       //sprawdz order
-      if (sortType === "descending") {
+      if (sortType === "d") {
         recipeArr.sort((a, b) => b.source.localeCompare(a.source));
       } else {
         //
@@ -135,8 +136,6 @@ export default {
         })
       );
     }
-
-    context.dispatch("generateSearchUrl");
   },
   // filters
   changeFilters(context, payload) {
@@ -147,7 +146,10 @@ export default {
     context.commit("setNumberOfPages", payload);
   },
 
-  setTest(context, payload) {
-    context.commit("setTest", payload);
+  listChange(context) {
+    context.commit("listChange");
+  },
+  setUrl(context, payload) {
+    context.commit("setUrl", payload);
   },
 };

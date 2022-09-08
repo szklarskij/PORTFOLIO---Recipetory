@@ -1,6 +1,11 @@
 <template>
   <the-header></the-header>
-  <router-view> </router-view>
+  <router-view v-slot="{ Component }">
+    <keep-alive include="recipe-results">
+      <component :is="Component" />
+    </keep-alive>
+  </router-view>
+  <!-- <router-view></router-view> -->
 </template>
 
 <script>

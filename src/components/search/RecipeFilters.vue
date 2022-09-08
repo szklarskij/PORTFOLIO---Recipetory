@@ -34,10 +34,10 @@
 <script>
 import { reactive, toRefs, watch, computed } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 export default {
   setup() {
-    const router = useRouter();
+    const route = useRoute();
     const store = useStore();
 
     const optionVegetarian = reactive({ id: "vegetarian", checked: false });
@@ -72,15 +72,17 @@ export default {
 
     ///////////////////////////////////////////////////////////////////////set on route change
     const routeParam = computed(function () {
-      return router.currentRoute.value.fullPath;
+      return route.params.query;
     });
     watch(routeParam, function () {
-      loadFilters();
+      if (routeParam.value) loadFilters();
     });
 
     ///////////////////////////////////////////////////////////////////////load settings
     const loadFilters = function () {
       const filters = store.getters["search/getFilters"].join(",");
+
+      // if (filters.length === 0) console.log("zero lenght");
       if (filters.includes("vegetarian")) {
         optionVegetarian.checked = true;
       } else {
@@ -99,7 +101,7 @@ export default {
       if (filters.includes("alcohol-free")) {
         optionAlcoholFree.checked = true;
       } else {
-        optionEggFree.checked = false;
+        optionAlcoholFree.checked = false;
       }
     };
 

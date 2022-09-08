@@ -6,14 +6,6 @@ export default {
   namespaced: true,
   state() {
     return {
-      searchSettings: {
-        searchString: "test",
-        searchPage: 1,
-        sortOption: "none",
-        sortType: null,
-        filters: [],
-      },
-
       searchString: "",
       searchList: [],
       searchListUnsorted: [],
@@ -24,12 +16,13 @@ export default {
       numberOfPages: null,
       paginationStatus: null,
       searchListResults: [],
-      sortOption: "none",
-      sortType: null,
+      sortOption: "n",
+      sortType: "n",
       forceFetch: 0,
       clearInput: false,
       filters: [],
-      test: "test1",
+      listChange: 0,
+      url: "",
     };
   },
   mutations,

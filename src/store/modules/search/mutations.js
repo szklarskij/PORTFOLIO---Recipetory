@@ -44,7 +44,11 @@ export default {
   setNumberOfPages(state, payload) {
     state.numberOfPages = payload;
   },
-  setTest(state, payload) {
-    state.test = payload;
+  listChange(state) {
+    console.log("mutation listchange");
+    state.listChange++;
+  },
+  setUrl(state, payload) {
+    state.url = payload;
   },
 };

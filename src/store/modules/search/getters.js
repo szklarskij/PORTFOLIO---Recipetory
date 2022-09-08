@@ -55,8 +55,8 @@ export default {
   getSearchSettings(state) {
     return state.searchSettings;
   },
-  getTest(state) {
-    return state.test;
+  getListChange(state) {
+    return state.listChange;
   },
   // getError(state) {
   //   return state.error;
