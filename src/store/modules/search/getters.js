@@ -58,6 +58,9 @@ export default {
   getListChange(state) {
     return state.listChange;
   },
+  getUrl(state) {
+    return state.url;
+  },
   // getError(state) {
   //   return state.error;
   // },

@@ -26,9 +26,9 @@
   </div>
 </template>
 <script>
-import { ref, computed, watch, onUpdated } from "vue";
+import { ref, computed, watch, onActivated } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
+import { useRoute, onBeforeRouteLeave } from "vue-router";
 export default {
   setup() {
     const route = useRoute();
@@ -45,28 +45,18 @@ export default {
     });
 
     /////////////////////////////////////////////////////////////////////// when no sort
+
     const turnOffSort = function () {
       sortType.value = "n";
     };
 
-    /////////////////////////////////////////////////////////////////////// force sort
+    /////////////////////////////////////////////////////////////////////// change sort options
+
     let loadingStage = false;
     watch(
       [sortOption, sortType],
-      (newValue, oldValue) => {
-        console.log("WATCHERRRRR");
+      () => {
         if (!loadingStage) {
-          console.log(newValue, oldValue);
-          // const oldSortType = store.getters["search/getSortType"];
-          // const oldSortOption = store.getters["search/getSortOption"];
-          // if (
-          //   oldSortType === sortType.value &&
-          //   oldSortOption === sortOption.value
-          // ) {
-          //   return console.log("stop");
-          // }
-
-          // console.log("1 - click");
           store.dispatch("search/setSortParams", [
             sortOption.value,
             sortType.value,
@@ -75,69 +65,53 @@ export default {
           store.dispatch("search/generateSearchUrl");
         }
         loadingStage = false;
-        // console.log();
-        // if (newValue === oldValue) return;
-
-        //
       },
       { flush: "post" }
     );
 
-    /////////////////////////////////////////////////////////////////////// empty radio fix
-    // watch(sortOption, function () {
-    //   if (!sortType.value) sortType.value = "a";
-    //   if (sortOption.value === "n") sortType.value = "n";
-    // });
+    /////////////////////////////////////////////////////////////////////// check if component is active
 
-    /////////////////////////////////////////////////////////////////////// set on route change
+    onActivated(function () {
+      active = true;
+    });
+
+    /////////////////////////////////////////////////////////////////////// deactivate when page changed
+
+    onBeforeRouteLeave(function (_, from) {
+      if (from.name === "search") {
+        active = false;
+      }
+    });
+    /////////////////////////////////////////////////////////////////////// check route changes
+
     const routeParam = computed(function () {
-      // console.log(route.params.query);
       return route.params.query;
     });
+    let active = true;
 
-    onUpdated(() => {
-      //   disableWatchParam = true;
-      //   console.log("onupdated");
-      //   // loadingStage = true;
-      //   store.dispatch("search/sort", [sortOption.value, sortType.value]);
-    });
     watch(routeParam, function () {
-      console.log("param change");
+      if (active) {
+        const sortQuery = route.params.query.slice(
+          route.params.query.indexOf("$") + 1
+        );
+        const sort = Array.from(
+          sortQuery.slice(
+            sortQuery.indexOf("=") + 1,
+            sortQuery.indexOf("=") + 3
+          )
+        );
 
-      // console.log("tutaj load powinien byc");
-      // loadingStage = true;
-      const sortQuery = route.params.query.slice(
-        route.params.query.indexOf("$") + 1
-      );
-      const sort = Array.from(
-        sortQuery.slice(sortQuery.indexOf("=") + 1, sortQuery.indexOf("=") + 3)
-      );
-      // console.log();
-      store.dispatch("search/setSortParams", sort);
-      // console.log(sortOption.value, sortType.value);
-      loadSettings();
-      loadingStage = false;
+        //store url params as sort settings
 
-      // if (loadSettings)
-      // if (routeParam.value)
-      //   console.log("tutaj load powinien byc", loadingStage);
-      // loadSettings();
-    });
-    const listChange = computed(function () {
-      return store.getters["search/getListChange"];
+        store.dispatch("search/setSortParams", sort);
+        loadSettings();
+        loadingStage = false;
+      }
     });
 
-    watch(listChange, function () {
-      // console.log("sort update!!!!!!!!!!!!!!!!!!!");
-      // loadSettings();
-    });
+    /////////////////////////////////////////////////////////////////////// load settings and change inputs
 
-    /////////////////////////////////////////////////////////////////////// load settings
     const loadSettings = function () {
-      console.log(
-        "////////////////////load sort settings",
-        store.getters["search/getSortOption"]
-      );
       const loadSortOption = store.getters["search/getSortOption"];
       if (loadSortOption !== sortOption.value) {
         if (loadSortOption && loadSortOption === "l") {
@@ -161,10 +135,13 @@ export default {
 
       loadingStage = true;
 
-      ///// tutaj nowy sort
+      // sort
+
       store.dispatch("search/sort", [sortOption.value, sortType.value]);
     };
-    /////////////////////////////////////////////////////////////////////// init
+
+    /////////////////////////////////////////////////////////////////////// init - load setting on first mount
+
     loadSettings();
 
     return { sortOption, sortType, showType, turnOffSort };

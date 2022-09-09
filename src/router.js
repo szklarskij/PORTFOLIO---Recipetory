@@ -11,7 +11,12 @@ const router = createRouter({
   routes: [
     { path: "/", redirect: "/search" },
     { path: "/search/", component: RecipeStart },
-    { path: "/search/:query", component: RecipeResults, props: true },
+    {
+      path: "/search/:query",
+      name: "search",
+      component: RecipeResults,
+      props: true,
+    },
     { path: "/favourites", component: FavouritePage },
     { path: "/auth", component: UserAuth },
     { path: "/:notFound(.*)", component: NotFound },

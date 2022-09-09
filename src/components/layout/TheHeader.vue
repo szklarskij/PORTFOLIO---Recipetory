@@ -19,7 +19,7 @@
       </div>
       <ul>
         <li>
-          <router-link to="/search/">Browse recipes</router-link>
+          <router-link v-if="url" :to="url">Browse recipes</router-link>
         </li>
         <li>
           <router-link to="/favourites">Favourites</router-link>
@@ -43,6 +43,9 @@ export default {
 
     const searchInput = ref("");
 
+    const url = computed(function () {
+      return store.getters["search/getUrl"];
+    });
     const submitSearch = function () {
       if (useValidateInput(searchInput.value, store)) {
         // console.log();
@@ -60,6 +63,7 @@ export default {
 
     const clearInput = function () {
       searchInput.value = "";
+      store.dispatch("search/setUrl", null);
     };
     //error
     const isError = computed(function () {
@@ -72,7 +76,7 @@ export default {
       // router.replace("/search");
     };
 
-    return { searchInput, submitSearch, clearInput, isError, handleError };
+    return { searchInput, submitSearch, clearInput, isError, handleError, url };
   },
 };
 </script>

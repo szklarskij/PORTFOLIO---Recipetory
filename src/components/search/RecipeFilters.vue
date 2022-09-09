@@ -32,9 +32,9 @@
   </div>
 </template>
 <script>
-import { reactive, toRefs, watch, computed } from "vue";
+import { reactive, toRefs, watch, computed, onActivated } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
+import { useRoute, onBeforeRouteLeave } from "vue-router";
 export default {
   setup() {
     const route = useRoute();
@@ -55,34 +55,67 @@ export default {
       optionAlcoholFree,
     ];
     ///////////////////////////////////////////////////////////////////////change filters
+    let loadingStage = false;
     watch(
       [optionVegetarian, optionPescatarian, optionEggFree, optionAlcoholFree],
       function () {
-        let filtersArray = [];
-        store.dispatch("search/setSearchingPage", 1);
-        optionsArray.forEach((opt) => {
-          if (opt.checked) {
-            filtersArray.push(opt.id);
-          }
-        });
-        store.dispatch("search/changeFilters", filtersArray);
-        store.dispatch("search/generateSearchUrl");
-      }
+        if (!loadingStage) {
+          let filtersArray = [];
+          store.dispatch("search/setSearchingPage", 1);
+          optionsArray.forEach((opt) => {
+            if (opt.checked) {
+              filtersArray.push(opt.id);
+            }
+          });
+          store.dispatch("search/changeFilters", filtersArray);
+          store.dispatch("search/generateSearchUrl");
+        }
+        loadingStage = false;
+      },
+      { flush: "post" }
     );
 
+    /////////////////////////////////////////////////////////////////////// check if component is active
+
+    onActivated(function () {
+      active = true;
+    });
+
+    /////////////////////////////////////////////////////////////////////// deactivate when page changed
+
+    onBeforeRouteLeave(function (_, from) {
+      if (from.name === "search") {
+        active = false;
+      }
+    });
     ///////////////////////////////////////////////////////////////////////set on route change
     const routeParam = computed(function () {
       return route.params.query;
     });
+    let active = true;
+
     watch(routeParam, function () {
-      if (routeParam.value) loadFilters();
+      if (active) {
+        const query = route.params.query;
+        const filterQuery = query.split("!")[1];
+
+        let filterArr = [];
+
+        if (filterQuery.includes("v")) filterArr.push("vegetarian");
+        if (filterQuery.includes("p")) filterArr.push("pescatarian");
+        if (filterQuery.includes("e")) filterArr.push("egg-free");
+        if (filterQuery.includes("a")) filterArr.push("alcohol-free");
+        store.dispatch("search/changeFilters", filterArr);
+
+        loadSettings();
+        loadingStage = false;
+      }
     });
 
     ///////////////////////////////////////////////////////////////////////load settings
-    const loadFilters = function () {
+    const loadSettings = function () {
       const filters = store.getters["search/getFilters"].join(",");
 
-      // if (filters.length === 0) console.log("zero lenght");
       if (filters.includes("vegetarian")) {
         optionVegetarian.checked = true;
       } else {
@@ -106,7 +139,7 @@ export default {
     };
 
     /////////////////////////////////////////////////////////////////////// init
-    loadFilters();
+    loadSettings();
 
     return {
       optionVegetarian: vegeRefs.checked,

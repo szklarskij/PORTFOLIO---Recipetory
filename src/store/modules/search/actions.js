@@ -95,7 +95,7 @@ export default {
     const filterParam = charArr.join("");
 
     const url = `/search/${input}&p=${page}$s=${sortOption}${sortType}!${filterParam}`;
-
+    context.commit("setUrl", url);
     router.push(url);
     console.log("2 generate url and push");
   },
