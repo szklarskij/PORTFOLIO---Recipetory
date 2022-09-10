@@ -90,9 +90,9 @@ export default {
     let active = true;
 
     watch(routeParam, function () {
-      if (active) {
-        const sortQuery = route.params.query.slice(
-          route.params.query.indexOf("$") + 1
+      if (active && routeParam.value) {
+        const sortQuery = routeParam.value.slice(
+          routeParam.value.indexOf("$") + 1
         );
         const sort = Array.from(
           sortQuery.slice(

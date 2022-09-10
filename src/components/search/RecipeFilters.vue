@@ -95,7 +95,7 @@ export default {
     let active = true;
 
     watch(routeParam, function () {
-      if (active) {
+      if ((active, routeParam.value)) {
         const query = route.params.query;
         const filterQuery = query.split("!")[1];
 

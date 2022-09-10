@@ -1,5 +1,5 @@
 <template>
-  <li>
+  <li @click="goToRecipe">
     <img :src="image" :alt="label" width="150" height="150" />
     <div>
       <h3>{{ label }}</h3>
@@ -15,6 +15,7 @@
 <script>
 // import BaseBadge from "../ui/BaseBadge.vue";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 export default {
   // components: { BaseBadge },
   props: {
@@ -22,12 +23,16 @@ export default {
     image: { type: String },
     source: { type: String },
     healthLabels: { type: Array },
+    id: { type: String },
   },
 
   setup(props) {
+    const router = useRouter();
     const badges = ref(props.healthLabels);
-
-    return { badges };
+    const goToRecipe = function () {
+      router.push("/recipe/" + props.id);
+    };
+    return { badges, goToRecipe };
   },
 };
 </script>

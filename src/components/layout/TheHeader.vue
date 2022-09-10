@@ -19,7 +19,7 @@
       </div>
       <ul>
         <li>
-          <router-link v-if="url" :to="url">Browse recipes</router-link>
+          <router-link v-if="url" :to="url">Search results</router-link>
         </li>
         <li>
           <router-link to="/favourites">Favourites</router-link>
@@ -35,12 +35,13 @@
 <script>
 import { useStore } from "vuex";
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 import useValidateInput from "../../hooks/validateInput.js";
 
 export default {
   setup() {
     const store = useStore();
-
+    const router = useRouter();
     const searchInput = ref("");
 
     const url = computed(function () {
@@ -49,7 +50,7 @@ export default {
     const submitSearch = function () {
       if (useValidateInput(searchInput.value, store)) {
         // console.log();
-
+        router.replace("/search");
         store.dispatch("search/resetSearchList");
         store.dispatch("search/setSearchingPage", 1);
         store.dispatch("search/setSearchString", searchInput.value);

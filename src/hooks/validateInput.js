@@ -1,6 +1,13 @@
 // import { useStore } from "vuex";
 
+import router from "@/router";
+
 export default function useValidateInput(searchString, store) {
+  if (!searchString) {
+    router.replace("/invalidUrl");
+    return;
+  }
+
   let validationOk = true;
   if (searchString.length < 3) {
     store.dispatch("search/setError", "Please input at least 3 characters");

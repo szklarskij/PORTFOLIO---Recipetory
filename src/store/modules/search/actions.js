@@ -1,4 +1,7 @@
 import router from "@/router";
+import { EDAMAM_ID } from "../../../config.js";
+import { EDAMAM_KEY } from "../../../config.js";
+import { LABELS_ARR } from "../../../config.js";
 
 export default {
   setSearchString(context, payload) {
@@ -11,41 +14,51 @@ export default {
     //fetch
     context.commit("spinnerOn");
 
-    let url = `https://api.edamam.com/api/recipes/v2?type=public&q=${searchString}&app_id=f71a3a7b&app_key=5f2135c7e0a7cb360b90cd46b9437971`;
+    let url = `https://api.edamam.com/api/recipes/v2?type=public&q=${searchString}&app_id=${EDAMAM_ID}&app_key=${EDAMAM_KEY}`;
 
     const response = await fetch(url, {
       method: "GET",
     });
     const data = await response.json();
+    if (!response.ok) {
+      const error = new Error(
+        data.message || "Failed to fetch data from server."
+      );
+      throw error;
+    }
 
+    console.log(data);
     let recipeArr = [];
     let unsortedRecipeArr = [];
 
     data.hits.forEach((item, index) => {
-      const labelArr = [
-        "Vegetarian",
-        "Pescatarian",
-        "Egg-Free",
-        "Alcohol-Free",
-      ];
       let filteredLabels = [];
 
-      labelArr.forEach((label) => {
+      LABELS_ARR.forEach((label) => {
         if (item.recipe.healthLabels.includes(label)) {
           filteredLabels.push(label.toLowerCase());
         }
       });
 
       const recipe = {
+        id: item.recipe.uri.split("recipe_")[1],
         label: item.recipe.label,
         image: item.recipe.image,
+        imageLarge: item.recipe.images.LARGE
+          ? item.recipe.images.LARGE.url
+          : item.recipe.image,
         source: item.recipe.source,
         calories: item.recipe.calories,
         healthLabels: filteredLabels,
         url: item.recipe.url,
+        ingredients: item.recipe.ingredients,
+        totalNutrients: item.recipe.totalNutrients,
+        totalTime: item.recipe.totalTime,
+        totalWeight: item.recipe.totalWeight,
+        servings: item.recipe.yield,
+
         unsortedIndex: index.toString(),
       };
-
       recipeArr.push(recipe);
     });
 
@@ -97,7 +110,6 @@ export default {
     const url = `/search/${input}&p=${page}$s=${sortOption}${sortType}!${filterParam}`;
     context.commit("setUrl", url);
     router.push(url);
-    console.log("2 generate url and push");
   },
   /////////////////sort
   setSortParams(context, payload) {
@@ -151,5 +163,8 @@ export default {
   },
   setUrl(context, payload) {
     context.commit("setUrl", payload);
+  },
+  setRecipeId(context, payload) {
+    context.commit("setRecipe", payload);
   },
 };

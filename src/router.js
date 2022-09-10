@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import RecipeStart from "./pages/search/RecipeStart.vue";
+import RecipeItem from "./pages/recipe/RecipeItem.vue";
 import RecipeResults from "./pages/search/RecipeResults.vue";
 import FavouritePage from "./pages/favourites/FavouritePage.vue";
 import UserAuth from "./pages/auth/UserAuth.vue";
@@ -15,8 +16,8 @@ const router = createRouter({
       path: "/search/:query",
       name: "search",
       component: RecipeResults,
-      props: true,
     },
+    { path: "/recipe/:id", component: RecipeItem },
     { path: "/favourites", component: FavouritePage },
     { path: "/auth", component: UserAuth },
     { path: "/:notFound(.*)", component: NotFound },
