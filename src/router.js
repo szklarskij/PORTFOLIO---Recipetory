@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import RecipeStart from "./pages/search/RecipeStart.vue";
-import RecipeItem from "./pages/recipe/RecipeItem.vue";
+import RecipeSelected from "./pages/recipe/RecipeSelected.vue";
 import RecipeResults from "./pages/search/RecipeResults.vue";
 import FavouritePage from "./pages/favourites/FavouritePage.vue";
 import UserAuth from "./pages/auth/UserAuth.vue";
 import NotFound from "./pages/NotFound.vue";
+import store from "./store/index.js";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -17,24 +18,23 @@ const router = createRouter({
       name: "search",
       component: RecipeResults,
     },
-    { path: "/recipe/:id", component: RecipeItem },
-    { path: "/favourites", component: FavouritePage },
+    { path: "/recipe/:id", component: RecipeSelected },
+    {
+      path: "/favourites",
+      component: FavouritePage,
+      meta: { requiresAuth: true },
+    },
     { path: "/auth", component: UserAuth },
     { path: "/:notFound(.*)", component: NotFound },
   ],
 });
 
-// router.beforeEach(function (to, from, next) {
-//   const fromQuery = from.params.query;
-//   const toQuery = to.params.query;
-//   if (fromQuery) {
-//     const checkFrom = fromQuery.substring(0, fromQuery.indexOf("&"));
-//     const checkTo = toQuery.substring(0, toQuery.indexOf("&"));
-//     console.log(checkFrom, checkTo);
-//     if (checkFrom === checkTo) {
-//       next("/search");
-//     }
-//   }
-//   next();
-// });
+router.beforeEach(function (to, _, next) {
+  if (to.meta.requiresAuth && !store.getters["auth/isAuthenticated"]) {
+    next("/auth");
+  } else {
+    next();
+  }
+});
+
 export default router;

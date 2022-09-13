@@ -9,10 +9,26 @@
 </template>
 
 <script>
+import { computed, watch } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import TheHeader from "./components/layout/TheHeader.vue";
 export default {
   components: { TheHeader },
   name: "App",
+
+  setup() {
+    const store = useStore();
+    store.dispatch("auth/tryLogin");
+    const router = useRouter();
+    const autoLogout = computed(function () {
+      return store.getters["auth/didAutoLogout"];
+    });
+
+    watch(autoLogout, () => {
+      router.replace("/search");
+    });
+  },
 };
 </script>
 

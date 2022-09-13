@@ -25,7 +25,10 @@
           <router-link to="/favourites">Favourites</router-link>
         </li>
         <li>
-          <router-link to="/auth">Login</router-link>
+          <router-link @click="getLastUrl" v-if="!isAuth" to="/auth"
+            >Login</router-link
+          >
+          <div class="logout" @click="logout" v-else>Logout</div>
         </li>
       </ul>
     </nav>
@@ -35,13 +38,14 @@
 <script>
 import { useStore } from "vuex";
 import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import useValidateInput from "../../hooks/validateInput.js";
 
 export default {
   setup() {
     const store = useStore();
     const router = useRouter();
+    const route = useRoute();
     const searchInput = ref("");
 
     const url = computed(function () {
@@ -49,7 +53,6 @@ export default {
     });
     const submitSearch = function () {
       if (useValidateInput(searchInput.value, store)) {
-        // console.log();
         router.replace("/search");
         store.dispatch("search/resetSearchList");
         store.dispatch("search/setSearchingPage", 1);
@@ -59,6 +62,22 @@ export default {
         searchInput.value = "";
       }
     };
+    //last url
+    const getLastUrl = function () {
+      const url = route.fullPath;
+      console.log(url);
+      if (url !== "/auth") store.dispatch("auth/setLastUrl", url);
+    };
+    //logout
+    const logout = function () {
+      store.dispatch("auth/logout");
+      router.push("/search");
+    };
+
+    //is logged
+    const isAuth = computed(function () {
+      return store.getters["auth/isAuthenticated"];
+    });
 
     //reset input
 
@@ -77,7 +96,17 @@ export default {
       // router.replace("/search");
     };
 
-    return { searchInput, submitSearch, clearInput, isError, handleError, url };
+    return {
+      searchInput,
+      submitSearch,
+      clearInput,
+      isError,
+      handleError,
+      url,
+      isAuth,
+      logout,
+      getLastUrl,
+    };
   },
 };
 </script>
@@ -92,17 +121,19 @@ header {
   align-items: center;
 }
 
-header a {
+header a,
+.logout {
   text-decoration: none;
   color: #ffffff;
   display: inline-block;
   padding: 0.75rem 1.5rem;
   border: 1px solid transparent;
 }
-
+.logout:hover,
 a:active,
 a:hover,
 a.router-link-active {
+  cursor: pointer;
   border: 1px solid #ffffff;
 }
 

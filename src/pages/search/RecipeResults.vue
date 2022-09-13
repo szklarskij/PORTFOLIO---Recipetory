@@ -1,14 +1,14 @@
 <template>
   <section>
-    <div v-if="isLoading">
+    <div v-if="isLoading && !failedFetch">
       <base-spinner></base-spinner>
     </div>
-    <base-container v-else>
-      <div v-if="!recipesLoaded">
+    <base-container v-else-if="!isLoading && !failedFetch">
+      <div class="padding" v-if="!recipesLoaded">
         <h2>Recipes not found!</h2>
         <p>Please input another keywords</p>
       </div>
-      <div v-else>
+      <div class="padding" v-else>
         <h2>Recipes has been found!</h2>
         <p>Showing results of "{{ searchString }}"</p>
         <recipe-sort></recipe-sort>
@@ -47,10 +47,16 @@
         </div>
       </div>
     </base-container>
+    <base-container v-else>
+      <div>
+        <h2>Something goes wrong!</h2>
+        <p>Check your internet connnection and try again.</p>
+      </div>
+    </base-container>
   </section>
 </template>
 <script>
-import { computed, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import RecipeItem from "../../components/search/RecipeItem.vue";
@@ -65,6 +71,7 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
+    const failedFetch = ref(false);
 
     const searchString = computed(function () {
       return store.getters["search/searchString"];
@@ -154,6 +161,7 @@ export default {
         const searchString = query.split("&")[0];
         await store.dispatch("search/fetchString", searchString);
       } catch (error) {
+        failedFetch.value = true;
         store.dispatch("search/setError", error);
       }
       store.dispatch("search/spinnerOff");
@@ -295,6 +303,7 @@ export default {
       prevPage,
       currPageShow,
       numOfPagesShow,
+      failedFetch,
     };
   },
 };
@@ -309,5 +318,11 @@ export default {
 }
 p {
   justify-self: center;
+}
+.padding {
+  padding: 1rem;
+}
+ul {
+  padding: 0 0 0 1rem;
 }
 </style>

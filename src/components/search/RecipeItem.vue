@@ -13,11 +13,9 @@
   </li>
 </template>
 <script>
-// import BaseBadge from "../ui/BaseBadge.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 export default {
-  // components: { BaseBadge },
   props: {
     label: { type: String },
     image: { type: String },
@@ -48,6 +46,14 @@ li {
   /* padding: 1rem; */
   margin: 1rem auto;
   max-width: 60rem;
+  transition: 0.6s ease;
+}
+
+li:hover,
+li:active {
+  cursor: pointer;
+  transition: 0.6s ease;
+  transform: translateX(-1rem);
 }
 img {
   /* border-radius: 50%; */

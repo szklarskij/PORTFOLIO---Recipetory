@@ -1,6 +1,9 @@
 <template>
   <div>
-    <button v-if="!link" :class="styleMode">
+    <a :href="urlto" v-if="url" :class="styleMode">
+      <slot></slot>
+    </a>
+    <button v-else-if="!link && !url" :class="styleMode">
       <slot></slot>
     </button>
     <router-link v-else :to="to" :class="styleMode">
@@ -23,6 +26,16 @@ export default {
       default: false,
     },
     to: {
+      type: String,
+      requried: false,
+      default: "/",
+    },
+    url: {
+      type: Boolean,
+      requried: false,
+      default: false,
+    },
+    urlto: {
       type: String,
       requried: false,
       default: "/",

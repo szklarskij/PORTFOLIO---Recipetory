@@ -10,6 +10,7 @@ import BaseBadge from "./components/ui/BaseBadge.vue";
 // import TestTest from "./pages/search/TestTest.vue";
 
 const app = createApp(App);
+
 app.use(router);
 app.use(store);
 
