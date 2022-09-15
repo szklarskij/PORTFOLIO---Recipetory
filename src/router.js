@@ -29,7 +29,13 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach(function (to, _, next) {
+router.beforeEach(function (to, from, next) {
+  // set redirect url after login
+
+  if (to.path === "/auth") store.dispatch("auth/setLastUrl", from.fullPath);
+
+  // guard
+
   if (to.meta.requiresAuth && !store.getters["auth/isAuthenticated"]) {
     next("/auth");
   } else {

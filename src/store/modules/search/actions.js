@@ -27,7 +27,6 @@ export default {
       throw error;
     }
 
-    console.log(data);
     let recipeArr = [];
     let unsortedRecipeArr = [];
 

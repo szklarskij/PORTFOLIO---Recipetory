@@ -61,7 +61,6 @@ export default {
             sortOption.value,
             sortType.value,
           ]);
-          console.log("1 watch changes", sortOption.value, sortType.value);
           store.dispatch("search/generateSearchUrl");
         }
         loadingStage = false;

@@ -44,7 +44,6 @@ export default {
       throw error;
     }
     const expiresIn = +responseData.expiresIn * 1000;
-    // const expiresIn = 100000;
 
     const expirationDate = new Date().getTime() + expiresIn;
 
@@ -89,6 +88,7 @@ export default {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("tokenExpiration");
+    context.dispatch("favourites/resetFavourites", "_", { root: true });
 
     clearTimeout(timer);
 

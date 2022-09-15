@@ -36,6 +36,7 @@ export default {
 </script>
 <style scoped>
 li {
+  background-color: white;
   list-style: none;
   gap: 3rem;
   display: flex;
@@ -45,7 +46,7 @@ li {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   /* padding: 1rem; */
   margin: 1rem auto;
-  max-width: 60rem;
+  /* max-width: 60rem; */
   transition: 0.6s ease;
 }
 

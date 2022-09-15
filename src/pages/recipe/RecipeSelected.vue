@@ -14,10 +14,10 @@
               <h2>
                 {{ label }}
               </h2>
-              <p class="bookmark" v-if="!bookmarked" @click="addBookmark">
+              <p class="bookmark" v-if="!bookmarked" @click="setBookmark">
                 <ion-icon name="bookmark-outline"></ion-icon>
               </p>
-              <p class="bookmark" v-else @click="removeBookmark">
+              <p class="bookmark" v-else @click="setBookmark">
                 <ion-icon name="bookmark"></ion-icon>
               </p>
             </div>
@@ -131,10 +131,9 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const onImgLoad = function () {
-      console.log("img loaded");
       imageLoaded.value = true;
     };
-    const bookmarked = ref(false);
+
     const imageLoaded = ref(false);
     const failedFetch = ref(false);
     let thisRecipe = null;
@@ -142,7 +141,7 @@ export default {
     const recipes = store.getters["search/getSearchList"];
     const isLoading = ref(true);
 
-    ///////////////////////////////////////////////////////////////////////recipe elements
+    /////////////////////////////////////////////////////////////////////// recipe elements
     const label = computed(function () {
       return thisRecipe.label;
     });
@@ -183,11 +182,35 @@ export default {
       return thisRecipe.totalNutrients;
     });
     /////////////////////////////////////////////////////////////////////// bookmarks
-    const addBookmark = function () {
-      bookmarked.value = true;
-    };
-    const removeBookmark = function () {
-      bookmarked.value = false;
+
+    const bookmarked = computed(function () {
+      if (
+        store.getters["favourites/getFavourites"].some(
+          (r) => r.id === thisRecipe.id
+        )
+      ) {
+        return true;
+      } else return false;
+    });
+
+    const setBookmark = function () {
+      let favArr = [];
+      favArr = store.getters["favourites/getFavourites"];
+      //remove from fav
+      if (
+        store.getters["auth/isAuthenticated"] &&
+        favArr.some((r) => r.id === thisRecipe.id)
+      ) {
+        const index = favArr.findIndex((r) => r.id === thisRecipe.id);
+        favArr.splice(index, 1);
+
+        store.dispatch("favourites/setFavourites", favArr);
+      } else if (store.getters["auth/isAuthenticated"]) {
+        favArr.push(thisRecipe);
+        store.dispatch("favourites/setFavourites", favArr);
+      } else {
+        router.push("/auth");
+      }
     };
 
     /////////////////////////////////////////////////////////////////////// validate input
@@ -198,7 +221,17 @@ export default {
 
     /////////////////////////////////////////////////////////////////////// init
     const init = async function () {
-      if (recipes.length !== 0) {
+      if (
+        store.getters["favourites/getFavourites"].length > 0 &&
+        store.getters["favourites/getFavourites"].some(
+          (r) => r.id === route.params.id
+        )
+      ) {
+        thisRecipe = store.getters["favourites/getFavourites"].find(
+          (recipe) => recipe.id === route.params.id
+        );
+        loadImage();
+      } else if (recipes.length !== 0) {
         // console.log(recipes);
 
         thisRecipe = recipes.find((recipe) => recipe.id === route.params.id);
@@ -258,7 +291,6 @@ export default {
           failedFetch.value = true;
           store.dispatch("search/setError", error);
         }
-        console.log(thisRecipe);
       }
     };
     const loadImage = function () {
@@ -271,6 +303,7 @@ export default {
           isLoading.value = false;
         };
       } catch (error) {
+        console.log(thisRecipe);
         store.dispatch("search/setError", error);
       }
     };
@@ -295,8 +328,7 @@ export default {
       servingsInput,
       failedFetch,
       bookmarked,
-      addBookmark,
-      removeBookmark,
+      setBookmark,
     };
   },
 };

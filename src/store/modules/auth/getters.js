@@ -1,5 +1,5 @@
 export default {
-  UserId(state) {
+  userId(state) {
     return state.userId;
   },
   token(state) {

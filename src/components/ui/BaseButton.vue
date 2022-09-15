@@ -48,23 +48,26 @@ export default {
 button,
 a {
   text-decoration: none;
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 1.6rem;
   font: inherit;
-  background-color: #3a0061;
-  border: 1px solid #3a0061;
-  color: white;
+  background-color: var(--color-button);
+  border: none;
   cursor: pointer;
   border-radius: 30px;
   margin-right: 0.5rem;
   display: inline-block;
+  color: var(--text-dark);
+  transition: 0.6s ease;
 }
 
 a:hover,
 a:active,
 button:hover,
 button:active {
-  background-color: #270041;
+  background-color: var(--color-button-hover);
   border-color: #270041;
+  transition: 0.6s ease;
+  transform: scale(1.02);
 }
 
 .flat {

@@ -3,56 +3,58 @@
     <div v-if="isLoading && !failedFetch">
       <base-spinner></base-spinner>
     </div>
-    <base-container v-else-if="!isLoading && !failedFetch">
-      <div class="padding" v-if="!recipesLoaded">
-        <h2>Recipes not found!</h2>
-        <p>Please input another keywords</p>
-      </div>
-      <div class="padding" v-else>
-        <h2>Recipes has been found!</h2>
-        <p>Showing results of "{{ searchString }}"</p>
-        <recipe-sort></recipe-sort>
-        <recipe-filters></recipe-filters>
-        <ul>
-          <recipe-item
-            v-for="recipe in recipes"
-            :key="recipe.id"
-            :label="recipe.label"
-            :image="recipe.image"
-            :source="recipe.source"
-            :healthLabels="recipe.healthLabels"
-            :id="recipe.id"
-          ></recipe-item>
-        </ul>
-        <div class="pagination">
-          <div class="prev-btn">
-            <base-button
-              @click="prevPage"
-              mode="outline"
-              v-if="prevButtonVisible"
-              >Previous</base-button
-            >
-          </div>
-          <p v-if="prevButtonVisible || nextButtonVisible">
-            {{ currPageShow }}/{{ numOfPagesShow }}
-          </p>
-          <div class="next-btn">
-            <base-button
-              @click="nextPage"
-              mode="outline"
-              v-if="nextButtonVisible"
-              >Next</base-button
-            >
+    <transition-group tag="ul" name="search-transition">
+      <base-container v-if="!isLoading && !failedFetch">
+        <div class="padding" v-if="!recipesLoaded">
+          <h2>Recipes not found!</h2>
+          <p>Please input another keywords</p>
+        </div>
+        <div class="padding" v-else>
+          <h2>Recipes has been found!</h2>
+          <p>Showing results of "{{ searchString }}"</p>
+          <recipe-sort></recipe-sort>
+          <recipe-filters></recipe-filters>
+          <transition-group tag="ul" name="recipe-list">
+            <recipe-item
+              v-for="recipe in recipes"
+              :key="recipe.id"
+              :label="recipe.label"
+              :image="recipe.image"
+              :source="recipe.source"
+              :healthLabels="recipe.healthLabels"
+              :id="recipe.id"
+            ></recipe-item>
+          </transition-group>
+          <div class="pagination">
+            <div class="prev-btn">
+              <base-button
+                @click="prevPage"
+                mode="outline"
+                v-if="prevButtonVisible"
+                >Previous</base-button
+              >
+            </div>
+            <p v-if="prevButtonVisible || nextButtonVisible">
+              {{ currPageShow }}/{{ numOfPagesShow }}
+            </p>
+            <div class="next-btn">
+              <base-button
+                @click="nextPage"
+                mode="outline"
+                v-if="nextButtonVisible"
+                >Next</base-button
+              >
+            </div>
           </div>
         </div>
-      </div>
-    </base-container>
-    <base-container v-else>
-      <div>
-        <h2>Something goes wrong!</h2>
-        <p>Check your internet connnection and try again.</p>
-      </div>
-    </base-container>
+      </base-container>
+      <base-container v-else-if="failedFetch">
+        <div>
+          <h2>Something goes wrong!</h2>
+          <p>Check your internet connnection and try again.</p>
+        </div>
+      </base-container>
+    </transition-group>
   </section>
 </template>
 <script>
@@ -141,7 +143,6 @@ export default {
       routeParam,
       function () {
         if (routeParam.value) {
-          console.log("setParams");
           setParamsOnLoad();
         }
       },
@@ -324,5 +325,52 @@ p {
 }
 ul {
   padding: 0 0 0 1rem;
+}
+
+.search-transition-enter-from {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.search-transition-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.search-transition-enter-active {
+  transition: all 0.3s ease-out;
+}
+.search-transition-leave-active {
+  transition: all 0.3s ease-in;
+}
+.search-transition-enter-to,
+.search-transition-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+.recipe-list-enter-from {
+  opacity: 0;
+}
+
+.recipe-list-enter-active {
+  transition: all 1s ease-out;
+}
+
+.recipe-list-enter-to,
+.recipe-list-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.recipe-list-leave-active {
+  transition: all 1s ease-in;
+  position: absolute;
+}
+
+.recipe-list-leave-to {
+  opacity: 0;
+}
+
+.recipe-list-move {
+  transition: transform 0.8s ease;
 }
 </style>

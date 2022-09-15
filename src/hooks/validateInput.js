@@ -17,10 +17,11 @@ export default function useValidateInput(searchString, store) {
   let charsOk = true;
   const charArr = searchString.split("");
   const checkChar = function (char) {
-    if (typeof char !== "string") {
-      return false;
+    if (char === " ") {
+      return true;
+    } else {
+      return char.toLowerCase() !== char.toUpperCase();
     }
-    return char.toLowerCase() !== char.toUpperCase();
   };
   charArr.forEach((l) => {
     const check = checkChar(l);

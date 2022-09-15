@@ -71,6 +71,8 @@ export default {
     const store = useStore();
     const router = useRouter();
 
+    /////////////////////////////////////////////////////////////////////// auth elements
+
     const isLoading = ref(false);
     const isLogging = ref(true);
     const formIsValid = ref(true);
@@ -83,6 +85,8 @@ export default {
     const passwordError = ref(false);
     const rePassword = ref("");
     const rePasswordError = ref(false);
+
+    /////////////////////////////////////////////////////////////////////// switch between log and sign
 
     const switchMode = function () {
       emailError.value = false;
@@ -103,7 +107,9 @@ export default {
     const clearRePasswordError = function () {
       rePasswordError.value = false;
     };
-    //reg
+
+    /////////////////////////////////////////////////////////////////////// sumbit
+
     const sumbitAuth = async function () {
       formIsValid.value = true;
       emailError.value = false;
