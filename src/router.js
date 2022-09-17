@@ -32,8 +32,14 @@ const router = createRouter({
 router.beforeEach(function (to, from, next) {
   // set redirect url after login
 
-  if (to.path === "/auth") store.dispatch("auth/setLastUrl", from.fullPath);
+  if (to.path === "/auth") {
+    store.dispatch("auth/setLastUrl", from.fullPath);
 
+    if (store.getters["auth/isAuthenticated"]) {
+      router.replace("/search");
+      console.log("replace");
+    }
+  }
   // guard
 
   if (to.meta.requiresAuth && !store.getters["auth/isAuthenticated"]) {

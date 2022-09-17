@@ -4,10 +4,13 @@
       <base-spinner></base-spinner>
     </div>
     <transition-group tag="ul" name="search-transition">
-      <base-container v-if="!isLoading && !failedFetch">
-        <div class="padding" v-if="!recipesLoaded">
-          <h2>Recipes not found!</h2>
-          <p>Please input another keywords</p>
+      <base-container v-if="!isLoading && !failedFetch" class="">
+        <div class="padding error" v-if="!recipesLoaded">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <div>
+            <h2>Recipes not found!</h2>
+            <p>Please input another keywords</p>
+          </div>
         </div>
         <div class="padding" v-else>
           <h2>Recipes has been found!</h2>
@@ -34,7 +37,7 @@
                 >Previous</base-button
               >
             </div>
-            <p v-if="prevButtonVisible || nextButtonVisible">
+            <p class="pages" v-if="prevButtonVisible || nextButtonVisible">
               {{ currPageShow }}/{{ numOfPagesShow }}
             </p>
             <div class="next-btn">
@@ -49,9 +52,12 @@
         </div>
       </base-container>
       <base-container v-else-if="failedFetch">
-        <div>
-          <h2>Something goes wrong!</h2>
-          <p>Check your internet connnection and try again.</p>
+        <div class="padding error">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <div>
+            <h2>Something went wrong!</h2>
+            <p>Check your internet connnection and try again.</p>
+          </div>
         </div>
       </base-container>
     </transition-group>
@@ -310,6 +316,13 @@ export default {
 };
 </script>
 <style scoped>
+h2 {
+  font-size: 3.6rem;
+}
+p {
+  font-size: 2rem;
+}
+
 .pagination {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -320,11 +333,19 @@ export default {
 p {
   justify-self: center;
 }
-.padding {
-  padding: 1rem;
-}
 ul {
-  padding: 0 0 0 1rem;
+  padding: 0;
+  margin-bottom: 4rem;
+}
+.error {
+  display: flex;
+  gap: 2rem;
+  align-content: center;
+  align-items: center;
+}
+ion-icon {
+  color: var(--color-error);
+  font-size: 7rem;
 }
 
 .search-transition-enter-from {
@@ -363,6 +384,7 @@ ul {
 
 .recipe-list-leave-active {
   transition: all 1s ease-in;
+  opacity: 0;
   position: absolute;
 }
 

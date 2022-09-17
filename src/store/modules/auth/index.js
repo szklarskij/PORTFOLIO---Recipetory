@@ -10,6 +10,7 @@ export default {
       token: null,
       didAutoLogout: false,
       lastUrl: null,
+      registerFromMainPage: false,
     };
   },
   mutations,

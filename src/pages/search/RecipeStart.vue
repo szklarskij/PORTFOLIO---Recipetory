@@ -1,16 +1,118 @@
 <template>
   <div>
     <base-container>
-      <div>
-        <h2>Start searching for recipes!</h2>
-        <p>Please enter specific keywords e.g. "pizza"</p>
+      <div class="padding">
+        <p class="welcome">Welcome to</p>
+        <h1>- Recipetory -</h1>
+
+        <div class="svgs">
+          <img src="../../assets/Salad.svg" alt="salad" width="100" />
+          <img src="../../assets/Pizza.svg" alt="pizza" width="100" />
+          <img src="../../assets/Spaghetti.svg" alt="spaghettin" width="100" />
+          <img src="../../assets/Pie.svg" alt="pie" width="100" />
+          <img src="../../assets/Sausage.svg" alt="sausage" width="100" />
+        </div>
+        <div class="search">
+          <ion-icon name="search-outline"></ion-icon>
+          <div>
+            <h2>Start searching for recipes!</h2>
+            <p>
+              Please enter specific keywords at the top of the page e.g. "pizza"
+            </p>
+          </div>
+        </div>
+        <div v-if="!isAuth" class="buttons">
+          <base-button @click="register">
+            <p class="signup">Register new account</p>
+          </base-button>
+          <base-button @click="login" styleMode="flat">
+            <p class="signup">Login</p>
+          </base-button>
+        </div>
+        <div v-else class="buttons">
+          <base-button @click="logout" styleMode="flat">
+            <p class="signup">Logout</p>
+          </base-button>
+        </div>
       </div>
     </base-container>
   </div>
 </template>
 
+<script>
+import { computed } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+export default {
+  setup() {
+    const router = useRouter();
+    const store = useStore();
+    const register = function () {
+      store.dispatch("auth/registerFromMainPage", true);
+      router.push("/auth");
+    };
+
+    const login = function () {
+      router.push("/auth");
+    };
+
+    const logout = function () {
+      store.dispatch("auth/logout");
+      router.push("/search");
+    };
+    const isAuth = computed(function () {
+      return store.getters["auth/isAuthenticated"];
+    });
+
+    return { register, login, logout, isAuth };
+  },
+};
+</script>
+
 <style scoped>
-div {
-  padding: 1rem;
+.welcome {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--text-dark);
+}
+.search {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  /* height: 50vh; */
+  /* min-height: 35vh; */
+  /* padding: 2rem; */
+}
+ion-icon {
+  color: inherit;
+  font-size: 7rem;
+  margin-right: 3rem;
+}
+
+.svgs {
+  margin: 8.6rem 8.2rem;
+  display: flex;
+  justify-content: space-between;
+}
+h1 {
+  text-align: center;
+  font-size: 6.2rem;
+  font-family: "Aladin", cursive;
+  color: var(--text-dark);
+}
+h2 {
+  font-size: 3.6rem;
+}
+
+.signup {
+  font-size: 2rem;
+  padding: 0 2rem;
+}
+.buttons {
+  display: flex;
+  margin-top: 8.6rem;
+  justify-content: center;
+  gap: 2rem;
 }
 </style>

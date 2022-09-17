@@ -50,13 +50,13 @@ a {
   text-decoration: none;
   padding: 1rem 1.6rem;
   font: inherit;
-  background-color: var(--color-button);
   border: none;
   cursor: pointer;
+  background: var(--gradient);
   border-radius: 30px;
   margin-right: 0.5rem;
   display: inline-block;
-  color: var(--text-dark);
+  color: var(--text-light);
   transition: 0.6s ease;
 }
 
@@ -65,18 +65,21 @@ a:active,
 button:hover,
 button:active {
   background-color: var(--color-button-hover);
-  border-color: #270041;
   transition: 0.6s ease;
-  transform: scale(1.02);
+  transform: scale(1.1);
 }
-
+.search {
+  background: none;
+  background-color: rgb(104, 104, 104);
+}
 .flat {
-  background-color: transparent;
-  color: #3a0061;
+  background: none;
+  color: var(--color-grad-2);
   border: none;
 }
 
 .outline {
+  background: none;
   background-color: transparent;
   border-color: #270041;
   color: #270041;
@@ -86,6 +89,6 @@ button:active {
 .flat:active,
 .outline:hover,
 .outline:active {
-  background-color: #edd2ff;
+  background-color: var(--color-button);
 }
 </style>

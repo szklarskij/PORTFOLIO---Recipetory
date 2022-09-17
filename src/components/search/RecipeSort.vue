@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sort-options">
     <p>Sort by:</p>
 
     <input
@@ -16,7 +16,7 @@
 
     <input type="radio" id="sortSource" value="s" v-model="sortOption" />
     <label for="sortSource">source</label>
-    <div v-if="showType">
+    <div class="sort-type" v-if="showType">
       <p class="space"></p>
       <input type="radio" id="sortAscending" value="a" v-model="sortType" />
       <label for="sortAscending">ascending</label>
@@ -149,11 +149,23 @@ export default {
 </script>
 
 <style scoped>
-div {
+.sort-options {
   display: flex;
   align-items: center;
+  margin-top: 2rem;
+  align-self: center;
 }
 .space {
   margin-left: 2rem;
+}
+p {
+  font-size: 2rem;
+}
+input {
+  margin: 0 0.3rem 0 2.4rem;
+  accent-color: var(--color-grad-2);
+}
+label {
+  font-size: 2rem;
 }
 </style>

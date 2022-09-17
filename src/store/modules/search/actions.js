@@ -61,6 +61,13 @@ export default {
       recipeArr.push(recipe);
     });
 
+    const securityKey = recipeArr[0].image.substring(
+      recipeArr[0].image.indexOf("=") + 1
+    );
+
+    context.dispatch("favourites/setKey", securityKey, { root: true });
+    // console.log(securityKey);
+
     context.commit("setSearchList", recipeArr);
     context.commit("setUnsortedList", unsortedRecipeArr);
   },

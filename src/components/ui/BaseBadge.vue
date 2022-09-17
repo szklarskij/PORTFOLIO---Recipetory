@@ -20,9 +20,10 @@ export default {
   background-color: #ccc;
   color: #252525;
   border-radius: 30px;
-  padding: 0.2rem 0.7rem;
+  padding: 0.2rem 1rem 0.6rem;
   display: inline-block;
-  margin-right: 0.5rem;
+  margin-right: 0.6rem;
+  font-size: 1.5rem;
 }
 
 .vegetarian {

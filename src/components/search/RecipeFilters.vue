@@ -154,5 +154,19 @@ export default {
 .filters {
   display: flex;
   align-items: center;
+  /* margin-top: 2rem; */
+  margin: 0.6rem 0 4rem;
+}
+
+p {
+  font-size: 2rem;
+  margin-right: 2rem;
+}
+input {
+  margin: 0 0.3rem 0 1rem;
+  accent-color: var(--color-grad-2);
+}
+label {
+  font-size: 2rem;
 }
 </style>

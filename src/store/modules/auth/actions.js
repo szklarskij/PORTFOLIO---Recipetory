@@ -104,4 +104,8 @@ export default {
     context.dispatch("logout");
     context.commit("setAutoLogout");
   },
+
+  registerFromMainPage(context, payload) {
+    context.commit("registerFromMainPage", payload);
+  },
 };

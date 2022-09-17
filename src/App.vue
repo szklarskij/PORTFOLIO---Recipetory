@@ -45,10 +45,12 @@ export default {
 
 :root {
   --color-primary: #f38e82;
-  --color-grad-1: #94d82d;
-  --color-grad-2: #5c940d;
+  --color-grad-1: #99c05d;
+  --color-grad-2: #48720c;
   --color-button: #d8f5a2;
   --color-button-hover: #ffec99;
+
+  --color-error: rgb(226, 85, 85);
 
   --text-dark: rgb(23, 37, 4);
   --text-light: #f5faeb;
@@ -79,8 +81,15 @@ html {
 }
 
 body {
+  background-image: linear-gradient(#f7ffea69, #f7ffeac9),
+    url("./assets/background.webp");
+  /* background-position: center; */
+  background-repeat: no-repeat;
+  background-size: cover;
   background-color: var(--backgroud-color);
+
   font-size: 1.6rem;
+  background-attachment: fixed;
 }
 
 #container {
@@ -92,6 +101,9 @@ body {
 }
 #wrapper {
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* transion */
@@ -114,5 +126,9 @@ body {
 .route-leave-from {
   opacity: 1;
   transform: translateY(0);
+}
+
+.padding {
+  padding: 7.4rem 6.2rem;
 }
 </style>

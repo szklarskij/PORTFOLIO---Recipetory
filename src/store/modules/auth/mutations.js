@@ -10,4 +10,7 @@ export default {
   setAutoLogout(state) {
     state.didAutoLogout = true;
   },
+  registerFromMainPage(state, payload) {
+    state.registerFromMainPage = payload;
+  },
 };

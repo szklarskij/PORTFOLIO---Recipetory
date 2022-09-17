@@ -13,7 +13,7 @@
         <form @submit.prevent="submitSearch">
           <input type="text" v-model.trim="searchInput" />
         </form>
-        <base-button @click="submitSearch" mode="flat"
+        <base-button @click="submitSearch" styleMode="search"
           >Search for recipe</base-button
         >
       </div>
@@ -78,7 +78,6 @@ export default {
 
     const clearInput = function () {
       searchInput.value = "";
-      store.dispatch("search/setUrl", null);
     };
     //error
     const isError = computed(function () {

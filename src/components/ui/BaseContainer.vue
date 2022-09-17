@@ -9,8 +9,11 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   /* padding: 1.6rem; */
   margin: 2rem auto;
-  max-width: 96rem;
+
+  min-width: 100rem;
+
   background-color: white;
+  margin: 3.6rem;
 }
 
 /* .container-enter-from,

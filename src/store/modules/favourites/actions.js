@@ -29,12 +29,17 @@ export default {
       const error = new Error("Failed to load favourite recipes from server!");
       throw error;
     }
-
+    const securityKey = context.getters.getKey;
+    console.log(securityKey);
     const responseData = await response.json();
     const favArr = JSON.parse(responseData);
     context.commit("setFavourites", favArr);
   },
   resetFavourites(context) {
     context.commit("setFavourites", []);
+  },
+
+  setKey(context, payload) {
+    context.commit("setKey", payload);
   },
 };

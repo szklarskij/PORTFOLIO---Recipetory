@@ -14,4 +14,7 @@ export default {
   didAutoLogout(state) {
     return state.didAutoLogout;
   },
+  registerFromMainPage(state) {
+    return state.registerFromMainPage;
+  },
 };

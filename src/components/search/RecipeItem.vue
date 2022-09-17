@@ -50,6 +50,15 @@ li {
   transition: 0.6s ease;
 }
 
+h3 {
+  margin-top: 2rem;
+  font-size: 2rem;
+}
+p {
+  font-size: 1.6rem;
+  margin-bottom: 2rem;
+}
+
 li:hover,
 li:active {
   cursor: pointer;

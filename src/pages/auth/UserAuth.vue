@@ -3,7 +3,7 @@
     <base-spinner v-if="isLoading"></base-spinner>
 
     <base-container v-else>
-      <div class="padding">
+      <div class="padding" v-show="!isAuth">
         <h2 v-if="isLogging">Log in</h2>
         <h2 v-else>Register</h2>
         <form @submit.prevent="sumbitAuth">
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
@@ -85,6 +85,9 @@ export default {
     const passwordError = ref(false);
     const rePassword = ref("");
     const rePasswordError = ref(false);
+    const isAuth = computed(function () {
+      return store.getters["auth/isAuthenticated"];
+    });
 
     /////////////////////////////////////////////////////////////////////// switch between log and sign
 
@@ -159,6 +162,16 @@ export default {
       }
       isLoading.value = false;
     };
+    /////////////////////////////////////////////////////////////////////// register from main page
+
+    const registerFromMainPage = function () {
+      if (store.getters["auth/registerFromMainPage"]) {
+        isLogging.value = false;
+        store.dispatch("auth/registerFromMainPage", false);
+      }
+    };
+    registerFromMainPage();
+
     return {
       isLoading,
       isLogging,
@@ -176,6 +189,7 @@ export default {
       clearRePasswordError,
       clearPasswordError,
       emailInput,
+      isAuth,
     };
   },
 };

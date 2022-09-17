@@ -6,7 +6,8 @@ export default {
   namespaced: true,
   state() {
     return {
-      favArr: []
+      favArr: [],
+      securityKey: null,
     };
   },
   mutations,
