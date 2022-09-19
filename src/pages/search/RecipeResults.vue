@@ -297,7 +297,8 @@ export default {
     /////////////////////////////////////////////////////////////////////// init
 
     setParamsOnLoad();
-    fetch();
+    if (store.getters["search/getSearchList"].length === 0) fetch();
+
     return {
       recipesLoaded,
       searchString,

@@ -24,7 +24,7 @@
             <p>By {{ source }}</p>
           </div>
 
-          <div v-if="badges">
+          <div class="badges" v-if="badges">
             <base-badge
               v-for="badge in badges"
               :key="badge"
@@ -61,7 +61,7 @@
                 Total weight: {{ totalWeight.toFixed(0) }} g
               </li>
             </ul>
-            <p class="title" v-if="time !== 0">
+            <p class="prep-time" v-if="time !== 0">
               Preparation time: {{ time }} min
             </p>
           </div>
@@ -215,7 +215,6 @@ export default {
       } else if (store.getters["auth/isAuthenticated"]) {
         favArr.push(savedRecipe);
         store.dispatch("favourites/setFavourites", favArr);
-        console.log(favArr);
       } else {
         router.push("/auth");
       }
@@ -230,8 +229,6 @@ export default {
     /////////////////////////////////////////////////////////////////////// init
     const init = async function () {
       if (recipes.length !== 0) {
-        // console.log(recipes);
-
         thisRecipe = recipes.find((recipe) => recipe.id === route.params.id);
         loadImage();
       } else if (store.getters["recipe/getRecipe"]) {
@@ -301,7 +298,6 @@ export default {
           isLoading.value = false;
         };
       } catch (error) {
-        console.log(thisRecipe);
         store.dispatch("search/setError", error);
       }
     };
@@ -334,15 +330,16 @@ export default {
 {
 <style scoped>
 h2 {
-  text-transform: uppercase;
   padding-top: 1rem;
-  font-size: 1.8rem;
+  font-size: 3.6rem;
   margin: 0;
 }
+
 .label {
   /* display: inline; */
-  margin: 0;
-  padding-bottom: 1rem;
+
+  margin: 0 0 2rem;
+  padding: 0;
 }
 .label-div {
   display: flex;
@@ -352,34 +349,36 @@ h2 {
 
 .title {
   display: flex;
-  font-size: 1.3rem;
+  font-size: 2rem;
   align-self: center;
   /* text-align: center; */
 }
 .bookmark {
-  font-size: 4rem;
-  padding: 0;
+  margin: 0;
+  /* padding: 1rem 0 0 0; */
+  scale: 1;
+  transition: 0.3s ease;
 }
 .bookmark:hover,
 .bookmark:active {
   cursor: pointer;
+  scale: 1.1;
+  transition: 0.3s ease;
 }
 .bookmark ion-icon {
-  font-size: 2rem;
-  padding: 1rem 1rem 0 1rem;
-  /* color: rgb(0, 0, 0); */
+  font-size: 4rem;
+  padding: 1.4rem 1rem 0 1rem;
 }
 input {
-  font-size: 1.3rem;
-  width: 3rem;
+  font-size: 2rem;
+  width: 3.8rem;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
 }
 
 .label p {
-  font-size: 1.2rem;
-  margin: 0;
-  /* padding-bottom: 1rem; */
+  font-size: 2rem;
+  padding: 0;
 }
 
 img {
@@ -409,6 +408,10 @@ img:hover {
   -o-transform: scale(1.5); /* Opera */
 }
 
+.badges {
+  margin-bottom: 3rem;
+}
+
 .recipe-grid {
   display: grid;
   gap: 1rem;
@@ -416,28 +419,33 @@ img:hover {
   grid-template-rows: 1fr;
   border-top-right-radius: 12px;
   border-top-left-radius: 12px;
-  background-color: rgb(231, 231, 231);
+  background-color: var(--text-light);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.26);
 }
 
 .ingredients-container {
   display: flex;
   flex-direction: column;
-  padding: 2rem 8rem 2rem 8rem;
+  padding: 4rem 8rem 6rem 8rem;
 }
 
 .ingredients {
-  margin: 2rem 5rem 3rem 5rem;
+  margin: 4rem 5rem 4rem 5rem;
 }
 
 .nutrients-list {
   list-style: none;
   padding: 0;
+  margin-bottom: 2rem;
 }
 .nutrients-el {
   margin: 0;
   margin-bottom: 0.5rem;
-  font-size: 1rem;
+  font-size: 1.6rem;
+}
+.prep-time {
+  font-weight: 600;
+  font-size: 2rem;
 }
 
 .igredients-list {
@@ -450,7 +458,7 @@ img:hover {
 }
 .igredients-el {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.6rem;
 }
 .link-to-recipe {
   align-self: center;

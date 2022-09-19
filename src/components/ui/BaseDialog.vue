@@ -65,8 +65,8 @@ export default {
 dialog {
   position: fixed;
   top: 20vh;
-  left: 10%;
-  width: 80%;
+  left: 25%;
+  width: 50%;
   z-index: 100;
   border-radius: 12px;
   border: none;
@@ -78,8 +78,8 @@ dialog {
 }
 
 header {
-  background-color: #3a0061;
-  color: white;
+  background: var(--gradient);
+  color: var(--text-light);
   width: 100%;
   padding: 1rem;
 }

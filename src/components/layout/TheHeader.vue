@@ -157,15 +157,18 @@ input {
   /* background-color: var(--backgroud-color); */
   color: var(--text-dark);
   padding: 1rem;
-  width: 40rem;
+  width: 30rem;
   border-radius: 30px;
   border: none;
   font-size: 1.6rem;
+  transition: 0.3s ease;
 }
 input:focus {
   border-color: var(--color-search-button-1);
   outline: none;
   border-style: double;
+  width: 40rem;
+  transition: 0.3s ease;
   /* border-width: thin; */
 }
 

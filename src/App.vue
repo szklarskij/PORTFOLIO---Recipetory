@@ -57,7 +57,7 @@ export default {
   --text-dark: rgb(23, 37, 4);
   --text-light: #f5faeb;
 
-  --backgroud-color: #f7ffea;
+  --background-color: #f7ffea;
 
   --gradient: linear-gradient(
     to right bottom,
@@ -72,7 +72,7 @@ export default {
   --color-grey-dark-2: #918581;
 }
 * {
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
   margin: 0;
 }
 
@@ -80,6 +80,7 @@ html {
   font-family: "Roboto Slab", serif;
   color: var(--text-dark);
   font-size: 62.5%;
+  overflow-y: scroll;
 }
 
 body {
@@ -87,8 +88,8 @@ body {
   background-image: linear-gradient(#f7ffea69, #f7ffeac9),
     url("./assets/background.webp");
   background-repeat: no-repeat;
-  background-color: var(--backgroud-color);
   background-size: cover;
+  background-color: var(--backgroud-color);
   background-attachment: fixed;
 }
 
@@ -96,7 +97,6 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  height: 100vh;
   margin: 0;
   padding: 0;
 }
@@ -104,7 +104,7 @@ body {
   margin: 0;
   flex: 1;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
 }
 

@@ -30,7 +30,14 @@ export default {
       throw error;
     }
     const responseData = await response.json();
-    const favArr = JSON.parse(responseData);
+
+    let favArr = [];
+    if (!responseData) {
+      favArr = [];
+    } else {
+      favArr = JSON.parse(responseData);
+    }
+
     context.commit("setFavourites", favArr);
   },
   resetFavourites(context) {

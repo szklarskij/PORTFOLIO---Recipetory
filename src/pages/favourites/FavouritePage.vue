@@ -41,7 +41,10 @@ export default {
     const store = useStore();
     const isLoading = ref(true);
     const isList = computed(function () {
-      if (store.getters["favourites/getFavourites"].length === 0) {
+      if (
+        !store.getters["favourites/getFavourites"] ||
+        store.getters["favourites/getFavourites"].length === 0
+      ) {
         return false;
       } else {
         return true;

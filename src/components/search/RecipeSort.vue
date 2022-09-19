@@ -17,7 +17,6 @@
     <input type="radio" id="sortSource" value="s" v-model="sortOption" />
     <label for="sortSource">source</label>
     <div class="sort-type" v-if="showType">
-      <p class="space"></p>
       <input type="radio" id="sortAscending" value="a" v-model="sortType" />
       <label for="sortAscending">ascending</label>
       <input type="radio" id="sortDescending" value="d" v-model="sortType" />
@@ -157,6 +156,7 @@ export default {
 }
 .space {
   margin-left: 2rem;
+  padding: 0 2rem;
 }
 p {
   font-size: 2rem;
@@ -167,5 +167,8 @@ input {
 }
 label {
   font-size: 2rem;
+}
+.sort-type {
+  margin-left: 4rem;
 }
 </style>

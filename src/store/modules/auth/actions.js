@@ -59,6 +59,7 @@ export default {
       token: responseData.idToken,
       userId: responseData.localId,
     });
+    context.dispatch("favourites/fetchFavourites", "_", { root: true });
   },
 
   tryLogin(context) {
@@ -81,6 +82,7 @@ export default {
         token: token,
         userId: userId,
       });
+      context.dispatch("favourites/fetchFavourites", "_", { root: true });
     }
   },
 
