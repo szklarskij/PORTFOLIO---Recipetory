@@ -12,7 +12,7 @@
           <img src="../../assets/Pie.svg" alt="pie" width="100" />
           <img src="../../assets/Sausage.svg" alt="sausage" width="100" />
         </div>
-        <div class="search">
+        <div class="search" @click="focus">
           <ion-icon name="search-outline"></ion-icon>
           <div>
             <h2>Start searching for recipes!</h2>
@@ -64,7 +64,10 @@ export default {
       return store.getters["auth/isAuthenticated"];
     });
 
-    return { register, login, logout, isAuth };
+    const focus = function () {
+      document.getElementById("searchBtn").focus();
+    };
+    return { register, login, logout, isAuth, focus };
   },
 };
 </script>
@@ -80,6 +83,7 @@ export default {
   align-content: center;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   /* height: 50vh; */
   /* min-height: 35vh; */
   /* padding: 2rem; */
@@ -91,6 +95,7 @@ ion-icon {
 }
 
 .svgs {
+  height: 10rem;
   margin: 8.6rem 8.2rem;
   display: flex;
   justify-content: space-between;

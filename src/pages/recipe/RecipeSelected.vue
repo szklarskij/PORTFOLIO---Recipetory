@@ -196,6 +196,13 @@ export default {
     const setBookmark = function () {
       let favArr = [];
       favArr = store.getters["favourites/getFavourites"];
+
+      const savedRecipe = {
+        id: thisRecipe.id,
+        label: thisRecipe.label,
+        source: thisRecipe.source,
+      };
+
       //remove from fav
       if (
         store.getters["auth/isAuthenticated"] &&
@@ -206,8 +213,9 @@ export default {
 
         store.dispatch("favourites/setFavourites", favArr);
       } else if (store.getters["auth/isAuthenticated"]) {
-        favArr.push(thisRecipe);
+        favArr.push(savedRecipe);
         store.dispatch("favourites/setFavourites", favArr);
+        console.log(favArr);
       } else {
         router.push("/auth");
       }
@@ -221,17 +229,7 @@ export default {
 
     /////////////////////////////////////////////////////////////////////// init
     const init = async function () {
-      if (
-        store.getters["favourites/getFavourites"].length > 0 &&
-        store.getters["favourites/getFavourites"].some(
-          (r) => r.id === route.params.id
-        )
-      ) {
-        thisRecipe = store.getters["favourites/getFavourites"].find(
-          (recipe) => recipe.id === route.params.id
-        );
-        loadImage();
-      } else if (recipes.length !== 0) {
+      if (recipes.length !== 0) {
         // console.log(recipes);
 
         thisRecipe = recipes.find((recipe) => recipe.id === route.params.id);

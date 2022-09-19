@@ -11,7 +11,7 @@
       <h1><router-link to="/" @click="clearInput">Recipetory</router-link></h1>
       <div class="search-container">
         <form @submit.prevent="submitSearch">
-          <input type="text" v-model.trim="searchInput" />
+          <input id="searchBtn" type="text" v-model.trim="searchInput" />
         </form>
         <base-button @click="submitSearch" styleMode="search"
           >Search for recipe</base-button
@@ -163,9 +163,9 @@ input {
   font-size: 1.6rem;
 }
 input:focus {
-  /* border-color: var(--color-grey-light-3); */
+  border-color: var(--color-search-button-1);
   outline: none;
-  /* border-style: double; */
+  border-style: double;
   /* border-width: thin; */
 }
 

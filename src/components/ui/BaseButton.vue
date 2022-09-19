@@ -64,14 +64,23 @@ a:hover,
 a:active,
 button:hover,
 button:active {
-  background-color: var(--color-button-hover);
+  background-color: none;
+  /* background: none; */
   transition: 0.6s ease;
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 .search {
+  color: var(--text-dark);
   background: none;
-  background-color: rgb(104, 104, 104);
+  background-color: var(--color-search-button-1);
 }
+
+.search:hover,
+.search:active {
+  color: var(--text-light);
+  background: none;
+}
+
 .flat {
   background: none;
   color: var(--color-grad-2);

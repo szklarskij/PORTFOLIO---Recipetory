@@ -196,9 +196,6 @@ export default {
 </script>
 
 <style scoped>
-.padding {
-  padding: 1rem;
-}
 form {
   margin: 1rem;
   padding: 1rem;
@@ -232,6 +229,7 @@ textarea:focus {
 .buttons {
   margin-top: 2rem;
   display: flex;
+  gap: 1rem;
 }
 p {
   margin: 0;

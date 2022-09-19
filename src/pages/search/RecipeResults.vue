@@ -383,7 +383,7 @@ ion-icon {
 }
 
 .recipe-list-leave-active {
-  transition: all 1s ease-in;
+  transition: all 0.3s ease-in;
   opacity: 0;
   position: absolute;
 }

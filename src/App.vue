@@ -45,10 +45,12 @@ export default {
 
 :root {
   --color-primary: #f38e82;
-  --color-grad-1: #99c05d;
-  --color-grad-2: #48720c;
+  --color-grad-1: #86a853;
+  --color-grad-2: #325008;
   --color-button: #d8f5a2;
   --color-button-hover: #ffec99;
+  --color-search-button-1: rgb(180, 206, 35);
+  --color-search-button-2: rgb(136, 158, 12);
 
   --color-error: rgb(226, 85, 85);
 
@@ -81,14 +83,12 @@ html {
 }
 
 body {
+  font-size: 1.6rem;
   background-image: linear-gradient(#f7ffea69, #f7ffeac9),
     url("./assets/background.webp");
-  /* background-position: center; */
   background-repeat: no-repeat;
-  background-size: cover;
   background-color: var(--backgroud-color);
-
-  font-size: 1.6rem;
+  background-size: cover;
   background-attachment: fixed;
 }
 
@@ -96,10 +96,12 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  height: 100vh;
   margin: 0;
   padding: 0;
 }
 #wrapper {
+  margin: 0;
   flex: 1;
   display: flex;
   align-items: center;
