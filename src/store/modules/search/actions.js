@@ -1,4 +1,5 @@
 import router from "@/router";
+import { useRoute } from "vue-router";
 import { EDAMAM_ID } from "../../../config.js";
 import { EDAMAM_KEY } from "../../../config.js";
 import { LABELS_ARR } from "../../../config.js";
@@ -61,12 +62,7 @@ export default {
       recipeArr.push(recipe);
     });
 
-    const securityKey = recipeArr[0].image.substring(
-      recipeArr[0].image.indexOf("=") + 1
-    );
-
-    context.dispatch("favourites/setKey", securityKey, { root: true });
-    // console.log(securityKey);
+    console.log(recipeArr);
 
     context.commit("setSearchList", recipeArr);
     context.commit("setUnsortedList", unsortedRecipeArr);
@@ -117,6 +113,13 @@ export default {
     context.commit("setUrl", url);
     router.push(url);
   },
+
+  initUrl(context) {
+    const url = useRoute().path;
+    context.commit("setUrl", url);
+    router.push(url);
+  },
+
   /////////////////sort
   setSortParams(context, payload) {
     context.commit("setSortParams", payload);

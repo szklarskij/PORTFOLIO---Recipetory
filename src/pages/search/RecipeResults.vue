@@ -28,6 +28,12 @@
               :id="recipe.id"
             ></recipe-item>
           </transition-group>
+          <div
+            v-if="recipes.length === 0 && recipesLoaded"
+            class="zero-filters"
+          >
+            No recipes that meet the conditions
+          </div>
           <div class="pagination">
             <div class="prev-btn">
               <base-button
@@ -295,8 +301,9 @@ export default {
     });
 
     /////////////////////////////////////////////////////////////////////// init
-
+    // store.dispatch("search/generateSearchUrl");
     setParamsOnLoad();
+    store.dispatch("search/initUrl");
     if (store.getters["search/getSearchList"].length === 0) fetch();
 
     return {

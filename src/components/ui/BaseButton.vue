@@ -47,6 +47,7 @@ export default {
 <style scoped>
 button,
 a {
+  white-space: nowrap;
   text-decoration: none;
   padding: 1rem 1.6rem;
   font: inherit;
@@ -70,6 +71,7 @@ button:active {
   transform: scale(1.05);
 }
 .search {
+  white-space: nowrap;
   color: var(--text-dark);
   background: none;
   background-color: var(--color-search-button-1);

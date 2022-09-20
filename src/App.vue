@@ -70,9 +70,22 @@ export default {
   --color-grey-light-3: #d3c7c3;
   --color-grey-dark-1: #615551;
   --color-grey-dark-2: #918581;
+
+  --large: 78.15em;
+  --medium: 61.25em;
+  --small: 37.5em;
+  --smallest: 31.25em;
+  /* 
+ // 1250px
+ // 980px
+ // 600px
+ // 500px 
+ */
 }
+
 * {
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
+  padding: 0;
   margin: 0;
 }
 
@@ -81,6 +94,7 @@ html {
   color: var(--text-dark);
   font-size: 62.5%;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 body {
@@ -91,13 +105,15 @@ body {
   background-size: cover;
   background-color: var(--backgroud-color);
   background-attachment: fixed;
+  overflow-x: hidden;
 }
 
 #container {
+  min-width: auto;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
 }
 #wrapper {
@@ -132,5 +148,13 @@ body {
 
 .padding {
   padding: 7.4rem 6.2rem;
+}
+
+/* 612 */
+
+@media (max-width: 38.25em) {
+  #wrapper {
+    align-items: center;
+  }
 }
 </style>

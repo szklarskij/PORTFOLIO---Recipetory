@@ -43,8 +43,4 @@ export default {
   resetFavourites(context) {
     context.commit("setFavourites", []);
   },
-
-  setKey(context, payload) {
-    context.commit("setKey", payload);
-  },
 };

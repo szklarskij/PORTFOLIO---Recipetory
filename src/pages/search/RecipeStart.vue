@@ -9,14 +9,24 @@
           <img src="../../assets/Salad.svg" alt="salad" width="100" />
           <img src="../../assets/Pizza.svg" alt="pizza" width="100" />
           <img src="../../assets/Spaghetti.svg" alt="spaghettin" width="100" />
-          <img src="../../assets/Pie.svg" alt="pie" width="100" />
-          <img src="../../assets/Sausage.svg" alt="sausage" width="100" />
+          <img
+            src="../../assets/Pie.svg"
+            alt="pie"
+            width="100"
+            class="svg-hide"
+          />
+          <img
+            src="../../assets/Sausage.svg"
+            alt="sausage"
+            width="100"
+            class="svg-hide"
+          />
         </div>
         <div class="search" @click="focus">
           <ion-icon name="search-outline"></ion-icon>
           <div>
             <h2>Start searching for recipes!</h2>
-            <p>
+            <p class="hide">
               Please enter specific keywords at the top of the page e.g. "pizza"
             </p>
           </div>
@@ -98,6 +108,7 @@ ion-icon {
   height: 10rem;
   margin: 8.6rem 8.2rem;
   display: flex;
+  gap: 1rem;
   justify-content: space-between;
 }
 h1 {
@@ -119,5 +130,71 @@ h2 {
   margin-top: 8.6rem;
   justify-content: center;
   gap: 2rem;
+}
+/* 830 */
+@media (max-width: 51.87em) {
+  .svgs {
+    margin: 8.6rem 0;
+  }
+  .padding {
+    padding: 7.4rem 3.2rem;
+  }
+  h2 {
+    font-size: 2.6rem;
+  }
+}
+
+/* 612 */
+
+@media (max-width: 38.25em) {
+  .svgs {
+    height: 8rem;
+  }
+  .padding {
+    padding: 7.4rem 3.2rem;
+  }
+  .hide {
+    display: none;
+  }
+}
+/* 520 */
+
+@media (max-width: 32.5em) {
+  .basic-container {
+    width: 40rem;
+  }
+  .svg-hide {
+    display: none;
+  }
+  .svgs {
+    margin: 5.6rem 0;
+  }
+  h2 {
+    font-size: 2rem;
+  }
+  .buttons {
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 3.6rem;
+  }
+}
+/* 405 */
+@media (max-width: 25.31em) {
+  .basic-container {
+    width: 35rem;
+  }
+  h1 {
+    font-size: 5.2rem;
+  }
+  .svgs {
+    margin: 3.5rem 0;
+  }
+  .hide {
+    display: none;
+  }
+  .padding {
+    padding: 3.6rem 3.2rem;
+  }
 }
 </style>
