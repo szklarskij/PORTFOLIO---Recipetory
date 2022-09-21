@@ -1,5 +1,5 @@
 <template>
-  <div class="sort-options">
+  <div class="sort-options" v-if="!mediumView">
     <p>Sort by:</p>
 
     <input
@@ -23,15 +23,54 @@
       <label for="sortDescending">descending order</label>
     </div>
   </div>
+  <div class="button" v-else>
+    <base-button styleMode="outline" @click="setMobileMenu"
+      >Sort options</base-button
+    >
+  </div>
+  <mobile-menu v-if="mobileMenuOpened" @close-mobile-menu="setMobileMenu">
+    <div class="mobile-sort">
+      <p>Sort by:</p>
+      <div>
+        <input
+          type="radio"
+          id="sortNone"
+          value="n"
+          @click="turnOffSort"
+          v-model="sortOption"
+        />
+        <label for="sortNone">none</label>
+      </div>
+      <div>
+        <input type="radio" id="sortLabel" value="l" v-model="sortOption" />
+        <label for="sortLabel">label</label>
+      </div>
+      <div class="mobile-margin">
+        <input type="radio" id="sortSource" value="s" v-model="sortOption" />
+        <label for="sortSource">source</label>
+      </div>
+      <p v-if="showType">In order:</p>
+      <div class="sort-type" v-if="showType">
+        <input type="radio" id="sortAscending" value="a" v-model="sortType" />
+        <label for="sortAscending">ascending</label>
+      </div>
+      <div class="sort-type" v-if="showType">
+        <input type="radio" id="sortDescending" value="d" v-model="sortType" />
+        <label for="sortDescending">descending</label>
+      </div>
+    </div>
+  </mobile-menu>
 </template>
 <script>
-import { ref, computed, watch, onActivated } from "vue";
+import { ref, computed, watch, onActivated, inject } from "vue";
 import { useStore } from "vuex";
 import { useRoute, onBeforeRouteLeave } from "vue-router";
 export default {
   setup() {
     const route = useRoute();
     const store = useStore();
+
+    const mediumView = inject("medium-view");
 
     const sortOption = ref("n");
     const sortType = ref("a");
@@ -138,11 +177,25 @@ export default {
       store.dispatch("search/sort", [sortOption.value, sortType.value]);
     };
 
+    /////////////////////////////////////////////////////////////////////// open mobile menu
+    const mobileMenuOpened = ref(false);
+    const setMobileMenu = function () {
+      mobileMenuOpened.value = !mobileMenuOpened.value;
+    };
+
     /////////////////////////////////////////////////////////////////////// init - load setting on first mount
 
     loadSettings();
 
-    return { sortOption, sortType, showType, turnOffSort };
+    return {
+      sortOption,
+      sortType,
+      showType,
+      turnOffSort,
+      mediumView,
+      setMobileMenu,
+      mobileMenuOpened,
+    };
   },
 };
 </script>
@@ -154,21 +207,56 @@ export default {
   margin-top: 2rem;
   align-self: center;
 }
-.space {
+.sort-options .space {
   margin-left: 2rem;
   padding: 0 2rem;
 }
-p {
+.sort-options p {
   font-size: 2rem;
 }
-input {
+.sort-options input {
   margin: 0 0.3rem 0 2.4rem;
   accent-color: var(--color-grad-2);
 }
-label {
+.sort-options label {
   font-size: 2rem;
 }
-.sort-type {
+.sort-options .sort-type {
   margin-left: 4rem;
+}
+.button {
+  margin-top: 1rem;
+}
+
+.mobile-sort {
+  color: var(--text-light);
+  width: 50%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+}
+.mobile-sort p {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+}
+.mobile-sort label {
+  font-size: 3rem;
+  margin-left: 2rem;
+}
+.mobile-sort input {
+  -ms-transform: scale(1.5);
+  -webkit-transform: scale(1.5);
+  transform: scale(1.5);
+  accent-color: unset;
+}
+.mobile-sort input:focus {
+  accent-color: unset;
+}
+.mobile-margin {
+  margin-bottom: 5rem !important;
+}
+.mobile-sort div {
+  margin-bottom: 2rem;
 }
 </style>

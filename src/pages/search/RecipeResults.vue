@@ -15,8 +15,10 @@
         <div class="padding" v-else>
           <h2>Recipes has been found!</h2>
           <p>Showing results of "{{ searchString }}"</p>
-          <recipe-sort></recipe-sort>
-          <recipe-filters></recipe-filters>
+          <div :class="fixButtons">
+            <recipe-sort></recipe-sort>
+            <recipe-filters></recipe-filters>
+          </div>
           <transition-group tag="ul" name="recipe-list">
             <recipe-item
               v-for="recipe in recipes"
@@ -70,7 +72,7 @@
   </section>
 </template>
 <script>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, inject } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import RecipeItem from "../../components/search/RecipeItem.vue";
@@ -95,6 +97,13 @@ export default {
     });
     const isLoading = computed(function () {
       return store.getters["search/isSearchingListLoading"];
+    });
+    /////////////////////////////////////////////////////////////////////// fix sort and filter buttons
+    const mediumView = inject("medium-view");
+    const fixButtons = computed(function () {
+      if (mediumView.value) {
+        return "fix-buttons";
+      } else return "";
     });
 
     /////////////////////////////////////////////////////////////////////// set params on load
@@ -319,6 +328,7 @@ export default {
       currPageShow,
       numOfPagesShow,
       failedFetch,
+      fixButtons,
     };
   },
 };
@@ -354,6 +364,10 @@ ul {
 ion-icon {
   color: var(--color-error);
   font-size: 7rem;
+}
+
+.fix-buttons {
+  display: flex;
 }
 
 .search-transition-enter-from {
@@ -402,5 +416,40 @@ ion-icon {
 
 .recipe-list-move {
   transition: transform 0.8s ease;
+}
+
+@media (max-width: 76.25em) {
+}
+/* 1115 */
+@media (max-width: 69.68em) {
+}
+/* 830 */
+@media (max-width: 51.87em) {
+}
+/* 720*/
+@media (max-width: 45em) {
+}
+/* 612 */
+
+@media (max-width: 38.25em) {
+}
+/* 520 */
+
+@media (max-width: 32.5em) {
+  h2 {
+    font-size: 2.8rem;
+  }
+}
+/* 405 */
+@media (max-width: 25.31em) {
+  h2 {
+    font-size: 2.4rem;
+  }
+}
+/* 320 */
+@media (max-width: 20em) {
+  .basic-container {
+    width: 27rem;
+  }
 }
 </style>

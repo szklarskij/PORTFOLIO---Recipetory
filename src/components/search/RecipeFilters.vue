@@ -1,5 +1,5 @@
 <template>
-  <div class="filters">
+  <div class="filters" v-if="!mediumView">
     <p>Filters:</p>
     <input
       type="checkbox"
@@ -30,15 +30,71 @@
     />
     <label><base-badge type="alcohol-free"></base-badge></label>
   </div>
+  <div v-else class="button">
+    <base-button styleMode="outline" @click="setMobileMenu"
+      >Filters</base-button
+    >
+  </div>
+  <mobile-menu v-if="mobileMenuOpened" @close-mobile-menu="setMobileMenu">
+    <div class="mobile-filter">
+      <p>Filters:</p>
+      <div>
+        <input
+          type="checkbox"
+          id="vegetarian"
+          v-model="optionVegetarian"
+          @click="optionClicked"
+        />
+        <label><base-badge type="vegetarian"></base-badge></label>
+      </div>
+      <div>
+        <input
+          type="checkbox"
+          id="pescatarian"
+          v-model="optionPescatarian"
+          @click="optionClicked"
+        />
+        <label><base-badge type="pescatarian"></base-badge></label>
+      </div>
+      <div>
+        <input
+          type="checkbox"
+          id="egg-free"
+          v-model="optionEggFree"
+          @click="optionClicked"
+        />
+        <label><base-badge type="egg-free"></base-badge></label>
+      </div>
+      <div>
+        <input
+          type="checkbox"
+          id="alcohol-free"
+          v-model="optionAlcoholFree"
+          @click="optionClicked"
+        />
+        <label><base-badge type="alcohol-free"></base-badge></label>
+      </div>
+    </div>
+  </mobile-menu>
 </template>
 <script>
-import { reactive, toRefs, watch, computed, onActivated } from "vue";
+import {
+  ref,
+  reactive,
+  toRefs,
+  watch,
+  computed,
+  onActivated,
+  inject,
+} from "vue";
 import { useStore } from "vuex";
 import { useRoute, onBeforeRouteLeave } from "vue-router";
 export default {
   setup() {
     const route = useRoute();
     const store = useStore();
+
+    const mediumView = inject("medium-view");
 
     const optionVegetarian = reactive({ id: "vegetarian", checked: false });
     const vegeRefs = toRefs(optionVegetarian);
@@ -137,7 +193,11 @@ export default {
         optionAlcoholFree.checked = false;
       }
     };
-
+    /////////////////////////////////////////////////////////////////////// open mobile menu
+    const mobileMenuOpened = ref(false);
+    const setMobileMenu = function () {
+      mobileMenuOpened.value = !mobileMenuOpened.value;
+    };
     /////////////////////////////////////////////////////////////////////// init
     loadSettings();
 
@@ -146,6 +206,9 @@ export default {
       optionPescatarian: pescaRefs.checked,
       optionEggFree: eggRefs.checked,
       optionAlcoholFree: alcoRefs.checked,
+      mediumView,
+      setMobileMenu,
+      mobileMenuOpened,
     };
   },
 };
@@ -168,5 +231,38 @@ input {
 }
 label {
   font-size: 2rem;
+}
+.button {
+  margin-top: 1rem;
+}
+
+.mobile-filter {
+  color: var(--text-light);
+  width: 50%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+}
+
+.mobile-filter p {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+}
+.mobile-filter label {
+  font-size: 3rem;
+  margin-left: 2rem;
+}
+.mobile-filter div {
+  margin-bottom: 2rem;
+}
+.mobile-filter input {
+  -ms-transform: scale(2);
+  -webkit-transform: scale(2);
+  transform: scale(2);
+  accent-color: unset;
+}
+.mobile-filter input:focus {
+  /* accent-color: var(--color-grad-2); */
 }
 </style>

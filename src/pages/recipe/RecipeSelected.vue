@@ -23,7 +23,8 @@
             </div>
             <p>By {{ source }}</p>
           </div>
-
+        </div>
+        <div class="grid-el-last">
           <div class="badges" v-if="badges">
             <base-badge
               v-for="badge in badges"
@@ -61,7 +62,7 @@
                 Total weight: {{ totalWeight.toFixed(0) }} g
               </li>
             </ul>
-            <p class="prep-time" v-if="time !== 0">
+            <p class="prep-time" v-if="true || time !== 0">
               Preparation time: {{ time }} min
             </p>
           </div>
@@ -69,13 +70,11 @@
       </div>
       <div class="ingredients-container">
         <p class="title">
-          Recipe ingredients per<input
-            type="number"
-            min="1"
-            max="20"
-            v-model="servingsInput"
-          />
-          servings
+          <span>Recipe ingredients per</span
+          ><span
+            ><input type="number" min="1" max="20" v-model="servingsInput" />
+            servings</span
+          >
         </p>
 
         <div class="ingredients">
@@ -336,8 +335,6 @@ h2 {
 }
 
 .label {
-  /* display: inline; */
-
   margin: 0 0 2rem;
   padding: 0;
 }
@@ -382,20 +379,23 @@ input {
 }
 
 img {
-  object-fit: fill;
+  object-fit: cover;
   transition: 0.6s ease;
   height: 100%;
   width: 100%;
 }
 .img-wrapper {
   border-top-left-radius: 12px;
-  display: inline-block;
+  background-color: red;
+  display: flex;
   overflow: hidden;
-  height: 100%;
-  width: auto;
-  -webkit-transition: 0.6s ease;
+  /* height: 100%; */
+  /* width: 40rem; */
+  /* -webkit-transition: 0.6s ease; */
   transition: 0.6s ease;
-  max-width: 100%;
+  grid-row: 1/3;
+  /* max-width: 100%;
+  min-width: 100%; */
 }
 
 img:hover {
@@ -409,18 +409,22 @@ img:hover {
 }
 
 .badges {
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 }
 
 .recipe-grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr 1.5fr;
-  grid-template-rows: 1fr;
+  /* grid-template-rows: 1fr 1fr; */
   border-top-right-radius: 12px;
   border-top-left-radius: 12px;
   background-color: var(--text-light);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.26);
+}
+
+.grid-el-last {
+  /* grid-row */
 }
 
 .ingredients-container {
@@ -439,6 +443,7 @@ img:hover {
   margin-bottom: 2rem;
 }
 .nutrients-el {
+  display: flex;
   margin: 0;
   margin-bottom: 0.5rem;
   font-size: 1.6rem;
@@ -446,6 +451,7 @@ img:hover {
 .prep-time {
   font-weight: 600;
   font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
 .igredients-list {
@@ -462,6 +468,93 @@ img:hover {
 }
 .link-to-recipe {
   align-self: center;
+}
+
+/* 1115 */
+@media (max-width: 69.68em) {
+  .label {
+    margin: 0;
+  }
+  .nutrients-list {
+    margin-bottom: 1rem;
+  }
+  .nutrients-el {
+    font-size: 1.4rem;
+  }
+  h2 {
+    font-size: 3rem;
+  }
+}
+
+/* 830 */
+@media (max-width: 51.87em) {
+  .ingredients {
+    margin: 4rem 2rem 4rem 2rem;
+  }
+}
+
+/* 612 */
+
+@media (max-width: 38.25em) {
+  .grid-el {
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    margin: 1rem 1rem 0 1rem;
+  }
+  .grid-el-last {
+    grid-column: 1/-1;
+    /* grid-row: 1/2; */
+    margin: 1rem 1rem 0 1rem;
+  }
+  .badges {
+    text-align: center;
+  }
+
+  .img-wrapper {
+    grid-column: 1/3;
+    grid-row: 2/3;
+    border-top-left-radius: 0px;
+    /* height: 8/0%; */
+  }
+  .nutrients {
+    margin: 0 auto;
+  }
+  .nutrients-list {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    /* width: 40%; */
+    flex-basis: 2rem;
+  }
+  .prep-time {
+    text-align: center;
+  }
+
+  .ingredients-container {
+    display: flex;
+    flex-direction: column;
+    padding: 4rem 4rem 6rem 4rem;
+  }
+  .nutrients-el {
+    align-self: center;
+  }
+}
+
+/* 520 */
+
+@media (max-width: 32.5em) {
+  .title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .igredients-list {
+    grid-template-columns: 1fr;
+    margin: 0 2rem;
+  }
+  .ingredients-container {
+    padding: 4rem 0 6rem 0;
+  }
 }
 </style>
 }

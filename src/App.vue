@@ -5,7 +5,10 @@
       <router-view v-slot="{ Component }">
         <keep-alive include="recipe-results">
           <transition name="route" mode="out-in">
-            <component :is="Component" />
+            <component
+              :is="Component"
+              @select-mobile-input="selectMobileInput"
+            />
           </transition>
         </keep-alive>
       </router-view>
@@ -16,7 +19,7 @@
 </template>
 
 <script>
-import { computed, watch } from "vue";
+import { ref, computed, watch, provide } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import TheHeader from "./components/layout/TheHeader.vue";
@@ -32,10 +35,36 @@ export default {
     const autoLogout = computed(function () {
       return store.getters["auth/didAutoLogout"];
     });
+    const mobileInput = ref(0);
+    const selectMobileInput = function () {
+      mobileInput.value++;
+    };
+
+    provide("select-mobile-input", mobileInput);
+
+    ///
+    const screenWidth = ref(window.innerWidth);
+    const handleResize = function () {
+      screenWidth.value = window.innerWidth;
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    const mediumView = computed(function () {
+      return screenWidth.value <= 1115;
+    });
+    const smallView = computed(function () {
+      return screenWidth.value <= 612;
+    });
+    provide("medium-view", mediumView);
+    provide("small-view", smallView);
+
+    ///
 
     watch(autoLogout, () => {
       router.replace("/search");
     });
+
+    return { selectMobileInput };
   },
 };
 </script>
@@ -75,11 +104,11 @@ export default {
   --medium: 61.25em;
   --small: 37.5em;
   --smallest: 31.25em;
-  /* 
+  /*
  // 1250px
  // 980px
  // 600px
- // 500px 
+ // 500px
  */
 }
 
@@ -99,13 +128,24 @@ html {
 
 body {
   font-size: 1.6rem;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
   background-image: linear-gradient(#f7ffea69, #f7ffeac9),
     url("./assets/background.webp");
-  background-repeat: no-repeat;
   background-size: cover;
-  background-color: var(--backgroud-color);
-  background-attachment: fixed;
-  overflow-x: hidden;
+  background-position: left;
+  height: 100%;
+  width: 100%;
+  min-height: var(--original-viewport-height);
+  left: 0;
+  top: 0;
+  will-change: transform;
+  z-index: -1;
 }
 
 #container {
@@ -155,6 +195,26 @@ body {
 @media (max-width: 38.25em) {
   #wrapper {
     align-items: center;
+  }
+}
+
+/* 830 */
+@media (max-width: 51.87em) {
+  .padding {
+    padding: 4.4rem 3.2rem;
+  }
+}
+
+/* 405 */
+@media (max-width: 25.31em) {
+  .padding {
+    padding: 3.6rem 3.2rem;
+  }
+}
+/* 360 */
+@media (max-width: 20em) {
+  .padding {
+    padding: 2.5rem 1rem;
   }
 }
 </style>

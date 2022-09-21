@@ -8,11 +8,10 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 
-  margin: 2rem auto;
+  margin: 3.6rem auto;
   width: 100rem;
 
   background-color: white;
-  margin: 3.6rem;
 }
 
 @media (max-width: 69.68em) {
@@ -22,6 +21,12 @@
 }
 /* 830 */
 @media (max-width: 51.87em) {
+  .basic-container {
+    width: 70rem;
+  }
+}
+/* 720*/
+@media (max-width: 45em) {
   .basic-container {
     width: 60rem;
   }
@@ -38,12 +43,20 @@
 @media (max-width: 32.5em) {
   .basic-container {
     width: 40rem;
+    /* padding: ; */
+    margin: 1.6rem auto;
   }
 }
 /* 405 */
 @media (max-width: 25.31em) {
   .basic-container {
     width: 35rem;
+  }
+}
+/* 320 */
+@media (max-width: 20em) {
+  .basic-container {
+    width: 27rem;
   }
 }
 </style>

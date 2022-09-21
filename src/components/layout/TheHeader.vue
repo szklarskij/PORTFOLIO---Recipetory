@@ -26,20 +26,21 @@
         </li>
       </ul>
       <div v-else class="mobile-menu">
-        <ion-icon @click="openNav" name="menu-outline"></ion-icon>
+        <ion-icon @click="setMobileMenu" name="menu-outline"></ion-icon>
       </div>
-      <div
-        @click="openNav"
-        class="close-nav-btn"
-        v-if="navOpened && mediumView"
-      >
-        <ion-icon name="close-outline"></ion-icon>
-      </div>
-      <div class="mobile-nav" v-if="navOpened && mediumView">
-        <ul>
+
+      <mobile-menu
+        v-if="mobileMenuOpened && mediumView"
+        @close-mobile-menu="setMobileMenu"
+        ><ul class="mobile-list">
           <li v-if="smallView" class="search-mobile">
             <form @submit.prevent="submitSearch">
-              <input id="searchBtn" type="text" v-model.trim="searchInput" />
+              <input
+                id="searchBtn-mobile"
+                type="text"
+                v-model.trim="searchInput"
+                autofocus
+              />
             </form>
             <div class="search-mobile-btn">
               <base-button @click="submitSearch" styleMode="search"
@@ -49,53 +50,53 @@
           </li>
 
           <li>
-            <router-link @click="openNav" v-if="url" :to="url"
+            <router-link @click="setMobileMenu" v-if="url" :to="url"
               >Search results</router-link
             >
           </li>
           <li>
-            <router-link @click="openNav" to="/favourites"
+            <router-link @click="setMobileMenu" to="/favourites"
               >Favourites</router-link
             >
           </li>
           <li>
-            <router-link @click="openNav" v-if="!isAuth" to="/auth"
+            <router-link @click="setMobileMenu" v-if="!isAuth" to="/auth"
               >Login</router-link
             >
             <div class="logout" @click="logout" v-else>Logout</div>
           </li>
         </ul>
-        <div class="backdrop"></div>
-      </div>
+      </mobile-menu>
     </nav>
   </header>
 </template>
 
 <script>
 import { useStore } from "vuex";
-import { ref, computed } from "vue";
+import { ref, computed, inject, watch } from "vue";
 import { useRouter } from "vue-router";
 import useValidateInput from "../../hooks/validateInput.js";
 
 export default {
   setup() {
-    //mobile
-    const screenWidth = ref(window.innerWidth);
-    const handleResize = function () {
-      screenWidth.value = window.innerWidth;
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    const mediumView = computed(function () {
-      return screenWidth.value <= 1115;
+    /////////////////////////////////////////////////////////////////////// watch for mobile input open
+    const selectMobileInput = inject("select-mobile-input");
+    watch(selectMobileInput, function () {
+      navOpened.value = true;
     });
-    const smallView = computed(function () {
-      return screenWidth.value <= 612;
-    });
+
+    const mediumView = inject("medium-view");
+    const smallView = inject("small-view");
 
     const navOpened = ref(false);
     const openNav = function () {
       navOpened.value = !navOpened.value;
+    };
+
+    /////////////////////////////////////////////////////////////////////// open mobile menu
+    const mobileMenuOpened = ref(false);
+    const setMobileMenu = function () {
+      mobileMenuOpened.value = !mobileMenuOpened.value;
     };
 
     const store = useStore();
@@ -111,7 +112,7 @@ export default {
 
     const submitSearch = function () {
       if (searchInput.value === "") return;
-      navOpened.value = false;
+      mobileMenuOpened.value = false;
       if (useValidateInput(searchInput.value, store)) {
         router.replace("/search");
         store.dispatch("search/sort", ["n", "n"]);
@@ -165,6 +166,8 @@ export default {
       smallView,
       openNav,
       navOpened,
+      setMobileMenu,
+      mobileMenuOpened,
     };
   },
 };
@@ -230,14 +233,16 @@ input {
   border-radius: 30px;
   border: none;
   font-size: 1.6rem;
-  transition: 0.3s ease;
+  transform-origin: right;
+  transition: transform 0.3s ease;
 }
 input:focus {
   border-color: var(--color-search-button-1);
   outline: none;
   border-style: double;
-  width: 35rem;
-  transition: 0.3s ease;
+  transform: scaleX(1.1);
+  transform-origin: right;
+  transition: transform 0.3s ease;
   /* border-width: thin; */
 }
 
@@ -294,22 +299,15 @@ ion-icon {
   -webkit-backdrop-filter: blur(10px);
 }
 
-.mobile-nav {
-  position: fixed;
-  /* left: 50%; */
-  top: 20%;
+.mobile-list {
   width: 100%;
-  z-index: 12;
-}
-.mobile-nav ul {
   display: flex;
   flex-direction: column;
 }
-.mobile-nav li {
+.mobile-list li {
   z-index: 15;
-  font-size: 4rem;
-  margin-bottom: 2rem;
-  /* background-color: var(--color-grad-2); */
+  font-size: 3rem;
+  margin: 0 0 2rem 0;
   color: var(--text-light);
   display: flex;
   justify-content: center;
@@ -317,19 +315,6 @@ ion-icon {
 }
 .p-search:before {
   content: "Search for recipe";
-}
-.close-nav-btn {
-  /* display: flex; */
-  position: fixed;
-  top: 2%;
-  right: 5%;
-  z-index: 99;
-}
-.close-nav-btn ion-icon {
-  /* z-index: 99; */
-
-  font-size: 8rem;
-  color: var(--text-light);
 }
 
 .search-mobile {
@@ -341,12 +326,17 @@ ion-icon {
 
 .search-mobile form {
   margin: 0;
+  font-size: 3rem;
   display: flex;
   justify-content: center;
 }
 
 .search-mobile input {
   width: 90%;
+  font-size: 3rem;
+}
+.search-mobile input:focus {
+  transform: scaleX(1);
 }
 .search-mobile-btn {
   display: flex;

@@ -50,11 +50,11 @@
 </template>
 
 <script>
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 export default {
-  setup() {
+  setup(_, context) {
     const router = useRouter();
     const store = useStore();
     const register = function () {
@@ -65,6 +65,7 @@ export default {
     const login = function () {
       router.push("/auth");
     };
+    const smallView = inject("small-view");
 
     const logout = function () {
       store.dispatch("auth/logout");
@@ -75,7 +76,12 @@ export default {
     });
 
     const focus = function () {
-      document.getElementById("searchBtn").focus();
+      // console.log(smallView);
+      if (!smallView.value) {
+        document.getElementById("searchBtn").focus();
+      } else {
+        context.emit("select-mobile-input");
+      }
     };
     return { register, login, logout, isAuth, focus };
   },
@@ -85,6 +91,7 @@ export default {
 <style scoped>
 .welcome {
   text-align: center;
+  white-space: nowrap;
   font-size: 2rem;
   color: var(--text-dark);
 }
@@ -112,6 +119,7 @@ ion-icon {
   justify-content: space-between;
 }
 h1 {
+  white-space: nowrap;
   text-align: center;
   font-size: 6.2rem;
   font-family: "Aladin", cursive;
@@ -136,9 +144,6 @@ h2 {
   .svgs {
     margin: 8.6rem 0;
   }
-  .padding {
-    padding: 7.4rem 3.2rem;
-  }
   h2 {
     font-size: 2.6rem;
   }
@@ -150,9 +155,6 @@ h2 {
   .svgs {
     height: 8rem;
   }
-  .padding {
-    padding: 7.4rem 3.2rem;
-  }
   .hide {
     display: none;
   }
@@ -160,9 +162,6 @@ h2 {
 /* 520 */
 
 @media (max-width: 32.5em) {
-  .basic-container {
-    width: 40rem;
-  }
   .svg-hide {
     display: none;
   }
@@ -181,20 +180,33 @@ h2 {
 }
 /* 405 */
 @media (max-width: 25.31em) {
-  .basic-container {
-    width: 35rem;
-  }
   h1 {
     font-size: 5.2rem;
   }
   .svgs {
-    margin: 3.5rem 0;
+    margin: 3rem 0;
   }
   .hide {
     display: none;
   }
-  .padding {
-    padding: 3.6rem 3.2rem;
+}
+/* 360 */
+@media (max-width: 20em) {
+  h1 {
+    font-size: 4.2rem;
+  }
+  .svgs {
+    margin: 3rem 0;
+    height: 5rem;
+  }
+  .hide {
+    display: none;
+  }
+  .search ion-icon {
+    margin-right: 1rem;
+  }
+  .signup {
+    font-size: 1.6rem;
   }
 }
 </style>

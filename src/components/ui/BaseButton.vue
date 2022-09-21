@@ -91,9 +91,12 @@ button:active {
 
 .outline {
   background: none;
+  border: solid;
+  border-width: 2px;
   background-color: transparent;
-  border-color: #270041;
-  color: #270041;
+  border-color: var(--color-grad-2);
+  color: var(--color-grad-2);
+  border-radius: 30px;
 }
 
 .flat:hover,

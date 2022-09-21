@@ -17,6 +17,7 @@ export default {
 </script>
 <style scoped>
 .badge {
+  white-space: nowrap;
   background-color: #ccc;
   color: #252525;
   border-radius: 30px;
@@ -24,6 +25,7 @@ export default {
   display: inline-block;
   margin-right: 0.6rem;
   font-size: 1.5rem;
+  margin-bottom: 0.3rem;
 }
 
 .vegetarian {
@@ -43,5 +45,13 @@ export default {
 .egg-free {
   background-color: #e48900;
   color: white;
+}
+
+/* 720*/
+@media (max-width: 45em) {
+  .badge {
+    font-size: 1.3rem;
+    padding: 0.1rem 1rem 0.5rem;
+  }
 }
 </style>
