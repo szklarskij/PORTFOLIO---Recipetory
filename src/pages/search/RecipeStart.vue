@@ -2,47 +2,54 @@
   <div>
     <base-container>
       <div class="padding">
-        <p class="welcome">Welcome to</p>
-        <h1>- Recipetory -</h1>
+        <div v-if="true">
+          <p class="welcome">Welcome to</p>
+          <h1>- Recipetory -</h1>
 
-        <div class="svgs">
-          <img src="../../assets/Salad.svg" alt="salad" width="100" />
-          <img src="../../assets/Pizza.svg" alt="pizza" width="100" />
-          <img src="../../assets/Spaghetti.svg" alt="spaghettin" width="100" />
-          <img
-            src="../../assets/Pie.svg"
-            alt="pie"
-            width="100"
-            class="svg-hide"
-          />
-          <img
-            src="../../assets/Sausage.svg"
-            alt="sausage"
-            width="100"
-            class="svg-hide"
-          />
-        </div>
-        <div class="search" @click="focus">
-          <ion-icon name="search-outline"></ion-icon>
-          <div>
-            <h2>Start searching for recipes!</h2>
-            <p class="hide">
-              Please enter specific keywords at the top of the page e.g. "pizza"
-            </p>
+          <div class="svgs">
+            <img src="../../assets/Salad.svg" alt="salad" width="100" />
+            <img src="../../assets/Pizza.svg" alt="pizza" width="100" />
+            <img
+              src="../../assets/Spaghetti.svg"
+              alt="spaghettin"
+              width="100"
+            />
+            <img
+              src="../../assets/Pie.svg"
+              alt="pie"
+              width="100"
+              class="svg-hide"
+            />
+            <img
+              src="../../assets/Sausage.svg"
+              alt="sausage"
+              width="100"
+              class="svg-hide"
+            />
           </div>
-        </div>
-        <div v-if="!isAuth" class="buttons">
-          <base-button @click="register">
-            <p class="signup">Register new account</p>
-          </base-button>
-          <base-button @click="login" styleMode="flat">
-            <p class="signup">Login</p>
-          </base-button>
-        </div>
-        <div v-else class="buttons">
-          <base-button @click="logout" styleMode="flat">
-            <p class="signup">Logout</p>
-          </base-button>
+          <div class="search" @click="focus">
+            <ion-icon name="search-outline"></ion-icon>
+            <div>
+              <h2>Start searching for recipes!</h2>
+              <p class="hide">
+                Please enter specific keywords at the top of the page e.g.
+                "pizza"
+              </p>
+            </div>
+          </div>
+          <div v-if="!isAuth" class="buttons">
+            <base-button @click="register">
+              <p class="signup">Register new account</p>
+            </base-button>
+            <base-button @click="login" styleMode="flat">
+              <p class="signup">Login</p>
+            </base-button>
+          </div>
+          <div v-else class="buttons">
+            <base-button @click="logout" styleMode="flat">
+              <p class="signup">Logout</p>
+            </base-button>
+          </div>
         </div>
       </div>
     </base-container>

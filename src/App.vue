@@ -124,6 +124,7 @@ html {
   font-size: 62.5%;
   overflow-y: scroll;
   overflow-x: hidden;
+  background-color: var(--color-grad-1);
 }
 
 body {
@@ -131,24 +132,6 @@ body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-}
-body::before {
-  content: "";
-  position: fixed;
-  background-image: linear-gradient(#f7ffea69, #f7ffeac9),
-    url("./assets/background.webp");
-  background-size: cover;
-  background-position: left;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  overflow: hidden;
-  height: 100%;
-  width: 100%;
-  min-height: var(--original-viewport-height);
-  left: 0;
-  top: 0;
-  will-change: transform;
-  z-index: -1;
 }
 
 #container {
@@ -171,8 +154,18 @@ body::before {
   margin: 0;
   flex: 1;
   display: flex;
+
   /* align-items: center; */
   justify-content: center;
+
+  background-image: linear-gradient(#f7ffea69, #f7ffeac9),
+    url("./assets/background.webp");
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center;
 }
 
 /* transion */
