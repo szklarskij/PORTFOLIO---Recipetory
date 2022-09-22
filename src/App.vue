@@ -139,6 +139,9 @@ body::before {
     url("./assets/background.webp");
   background-size: cover;
   background-position: left;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  overflow: hidden;
   height: 100%;
   width: 100%;
   min-height: var(--original-viewport-height);
@@ -155,6 +158,14 @@ body::before {
   min-height: 100vh;
   margin: 0 auto;
   padding: 0;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-x: hidden; /* or any other value */
+  overflow-y: auto;
 }
 #wrapper {
   margin: 0;
@@ -215,6 +226,13 @@ body::before {
 @media (max-width: 20em) {
   .padding {
     padding: 2.5rem 1rem;
+  }
+}
+
+@media only screen and (max-device-height: 1024px) and (max-device-width: 1024px) {
+  .palette-primary.custom-background,
+  .boldgrid-section.background-fixed {
+    background-attachment: scroll !important;
   }
 }
 </style>

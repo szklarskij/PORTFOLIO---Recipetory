@@ -197,8 +197,7 @@ export default {
 
 <style scoped>
 form {
-  margin: 1rem;
-  padding: 1rem;
+  margin: 2rem 0;
 }
 
 .form-control {
@@ -238,5 +237,11 @@ p {
 .error-valid {
   color: red;
   margin: 0 0 1rem;
+}
+
+@media (max-width: 20em) {
+  .buttons {
+    flex-direction: column;
+  }
 }
 </style>

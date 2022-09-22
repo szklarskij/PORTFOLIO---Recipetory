@@ -62,7 +62,7 @@
                 Total weight: {{ totalWeight.toFixed(0) }} g
               </li>
             </ul>
-            <p class="prep-time" v-if="true || time !== 0">
+            <p class="prep-time" v-if="time !== 0">
               Preparation time: {{ time }} min
             </p>
           </div>
@@ -89,7 +89,7 @@
                 ing.quantity === 0
                   ? ""
                   : Math.round(
-                      ((ing.quantity * servingsInput) / servings) * 100
+                      ((ing.quantity * servingsInputFix) / servings) * 100
                     ) / 100
               }}
               {{
@@ -161,6 +161,7 @@ export default {
     });
 
     const servingsInput = ref(null);
+    const servingsInputFix = ref(null);
 
     const time = computed(function () {
       return thisRecipe.totalTime;
@@ -221,8 +222,13 @@ export default {
 
     /////////////////////////////////////////////////////////////////////// validate input
 
-    watch(servingsInput, (newVal, oldVal) => {
-      if (newVal <= 0 || newVal > 20) servingsInput.value = oldVal;
+    watch(servingsInput, (newVal) => {
+      if (newVal === "") return;
+      if (newVal <= 0 || newVal > 30) {
+        servingsInput.value = servingsInputFix.value;
+      } else {
+        servingsInputFix.value = newVal;
+      }
     });
 
     /////////////////////////////////////////////////////////////////////// init
@@ -300,6 +306,7 @@ export default {
         store.dispatch("search/setError", error);
       }
     };
+    /////////////////////////////////////////////////////////////////////// DEMO
 
     init();
     return {
@@ -319,6 +326,7 @@ export default {
       healthLabels,
       totalNutrients,
       servingsInput,
+      servingsInputFix,
       failedFetch,
       bookmarked,
       setBookmark,

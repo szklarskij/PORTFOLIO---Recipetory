@@ -1,7 +1,9 @@
 <template>
   <div class="el">
     <li @click="goToRecipe">
-      <ion-icon class="star" name="star-outline"></ion-icon>
+      <div class="star-container">
+        <ion-icon class="star" name="star-outline"></ion-icon>
+      </div>
       <div>
         <h3>{{ label }}</h3>
         <p>By: {{ source }}</p>
@@ -37,6 +39,10 @@ export default {
 };
 </script>
 <style scoped>
+.star-container {
+  display: flex;
+}
+
 .star {
   font-size: 3rem;
   align-self: center;
@@ -92,7 +98,7 @@ div {
 .trash {
   font-size: 3rem;
   align-self: center;
-  padding: 2rem;
+  padding: 1rem;
 }
 .trash:hover,
 .trash:active {

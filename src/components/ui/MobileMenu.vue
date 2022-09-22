@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="slot">
+      <div class="close-btn" @click="close">
+        <ion-icon name="close-outline"></ion-icon>
+      </div>
       <slot></slot>
     </div>
     <div class="backdrop"></div>
-    <div class="close-btn" @click="close">
-      <ion-icon name="close-outline"></ion-icon>
-    </div>
   </div>
 </template>
 
@@ -26,14 +26,14 @@ export default {
 <style scoped>
 .slot {
   position: fixed;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 1fr 8fr;
+  grid-auto-columns: 1fr;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  min-width: 100%;
-  min-height: 100%;
+
   z-index: 12;
   justify-content: center;
 }
@@ -51,10 +51,12 @@ export default {
 }
 
 .close-btn {
-  position: fixed;
+  justify-self: flex-end;
+  /* width: 100vh; */
+  /* position: fixed;
   top: 2%;
   right: 5%;
-  z-index: 99;
+  z-index: 99; */
 }
 .close-btn ion-icon {
   font-size: 8rem;

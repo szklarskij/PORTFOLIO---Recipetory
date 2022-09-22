@@ -3,6 +3,9 @@
     <base-dialog :show="!!isError" :title="dialogTitle" @close="handleError">
       <p>{{ isError }}</p>
     </base-dialog>
+    <base-dialog v-if="showDemo" show title="DEMO" @close="handleDemo">
+      <the-demo></the-demo>
+    </base-dialog>
     <nav>
       <h1><router-link to="/" @click="clearInput">Recipetory</router-link></h1>
       <div v-if="!smallView" class="search-container">
@@ -49,8 +52,8 @@
             </div>
           </li>
 
-          <li>
-            <router-link @click="setMobileMenu" v-if="url" :to="url"
+          <li v-if="url">
+            <router-link @click="setMobileMenu" :to="url"
               >Search results</router-link
             >
           </li>
@@ -72,26 +75,23 @@
 </template>
 
 <script>
+import TheDemo from "./../layout/TheDemo.vue";
 import { useStore } from "vuex";
 import { ref, computed, inject, watch } from "vue";
 import { useRouter } from "vue-router";
 import useValidateInput from "../../hooks/validateInput.js";
 
 export default {
+  components: { TheDemo },
   setup() {
     /////////////////////////////////////////////////////////////////////// watch for mobile input open
     const selectMobileInput = inject("select-mobile-input");
     watch(selectMobileInput, function () {
-      navOpened.value = true;
+      mobileMenuOpened.value = true;
     });
 
     const mediumView = inject("medium-view");
     const smallView = inject("small-view");
-
-    const navOpened = ref(false);
-    const openNav = function () {
-      navOpened.value = !navOpened.value;
-    };
 
     /////////////////////////////////////////////////////////////////////// open mobile menu
     const mobileMenuOpened = ref(false);
@@ -127,6 +127,7 @@ export default {
     };
     //logout
     const logout = function () {
+      mobileMenuOpened.value = false;
       store.dispatch("auth/logout");
       router.push("/search");
     };
@@ -149,7 +150,16 @@ export default {
     const handleError = function () {
       store.dispatch("search/setError", null);
       clearInput();
-      // router.replace("/search");
+    };
+    //demo
+    const showDemo = ref(false);
+
+    const checkVisited = localStorage.getItem("demo");
+    if (checkVisited !== "visited") showDemo.value = true;
+
+    const handleDemo = function () {
+      showDemo.value = false;
+      localStorage.setItem("demo", "visited");
     };
 
     return {
@@ -164,10 +174,10 @@ export default {
       dialogTitle,
       mediumView,
       smallView,
-      openNav,
-      navOpened,
       setMobileMenu,
       mobileMenuOpened,
+      handleDemo,
+      showDemo,
     };
   },
 };
@@ -176,15 +186,15 @@ export default {
 <style scoped>
 header {
   font-size: 1.6rem;
-  /* min-width: 100vh; */
-  /* width: 100%; */
-  height: 7.4rem;
+  overscroll-behavior: none;
+  position: static;
+  top: 100rem;
   background: var(--gradient);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.26);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow-x: none;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
 }
 
 header a,

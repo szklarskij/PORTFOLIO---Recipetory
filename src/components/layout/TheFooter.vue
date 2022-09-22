@@ -19,6 +19,8 @@
 </template>
 <style scoped>
 footer {
+  overscroll-behavior: none;
+  position: static;
   display: flex;
   justify-content: center;
   background: var(--gradient);
