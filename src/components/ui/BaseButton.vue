@@ -99,9 +99,7 @@ button:active {
   border-radius: 30px;
 }
 
-.flat:hover,
 .flat:active,
-.outline:hover,
 .outline:active {
   background-color: var(--color-button);
 }

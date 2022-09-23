@@ -30,8 +30,8 @@
   </div>
   <mobile-menu v-if="mobileMenuOpened" @close-mobile-menu="setMobileMenu">
     <div class="mobile-sort">
-      <p>Sort by:</p>
-      <div>
+      <p class="no-wrap">Sort by:</p>
+      <div class="no-wrap">
         <input
           type="radio"
           id="sortNone"
@@ -41,20 +41,20 @@
         />
         <label for="sortNone">none</label>
       </div>
-      <div>
+      <div class="no-wrap">
         <input type="radio" id="sortLabel" value="l" v-model="sortOption" />
         <label for="sortLabel">label</label>
       </div>
-      <div class="mobile-margin">
+      <div class="mobile-margin no-wrap">
         <input type="radio" id="sortSource" value="s" v-model="sortOption" />
         <label for="sortSource">source</label>
       </div>
       <p v-if="showType">In order:</p>
-      <div class="sort-type" v-if="showType">
+      <div class="sort-type no-wrap" v-if="showType">
         <input type="radio" id="sortAscending" value="a" v-model="sortType" />
         <label for="sortAscending">ascending</label>
       </div>
-      <div class="sort-type" v-if="showType">
+      <div class="sort-type no-wrap" v-if="showType">
         <input type="radio" id="sortDescending" value="d" v-model="sortType" />
         <label for="sortDescending">descending</label>
       </div>

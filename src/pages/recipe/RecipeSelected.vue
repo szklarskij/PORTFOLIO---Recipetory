@@ -23,48 +23,57 @@
             </div>
             <p>By {{ source }}</p>
           </div>
+          <base-badge
+            v-for="badge in badges"
+            :key="badge"
+            :type="badge"
+          ></base-badge>
         </div>
         <div class="grid-el-last">
-          <div class="badges" v-if="badges">
-            <base-badge
-              v-for="badge in badges"
-              :key="badge"
-              :type="badge"
-            ></base-badge>
+          <div class="badges" v-if="badges"></div>
+          <div class="nutri-btn">
+            <base-button
+              v-if="smallView"
+              styleMode="outline"
+              @click="showNutri"
+              >{{ isNutri ? "Hide nutrients" : "Show nutrients" }}</base-button
+            >
           </div>
-          <div class="nutrients">
-            <ul class="nutrients-list">
-              <li class="nutrients-el">
-                Energy: {{ totalNutrients.ENERC_KCAL.quantity.toFixed(0) }}
-                {{ totalNutrients.ENERC_KCAL.unit }}
-              </li>
-              <li class="nutrients-el">
-                Protein: {{ totalNutrients.PROCNT.quantity.toFixed(0) }}
-                {{ totalNutrients.PROCNT.unit }}
-              </li>
-              <li class="nutrients-el">
-                Fat: {{ totalNutrients.FAT.quantity.toFixed(0) }}
-                {{ totalNutrients.FAT.unit }}
-              </li>
-              <li class="nutrients-el">
-                Carbs: {{ totalNutrients.CHOCDF.quantity.toFixed(0) }}
-                {{ totalNutrients.CHOCDF.unit }}
-              </li>
-              <li class="nutrients-el">
-                Cholesterol: {{ totalNutrients.CHOLE.quantity.toFixed(0) }}
-                {{ totalNutrients.CHOLE.unit }}
-              </li>
-              <li class="nutrients-el">
-                Sugars: {{ totalNutrients.SUGAR.quantity.toFixed(0) }}
-                {{ totalNutrients.SUGAR.unit }}
-              </li>
-              <li class="nutrients-el">
-                Total weight: {{ totalWeight.toFixed(0) }} g
-              </li>
-            </ul>
-            <p class="prep-time" v-if="time !== 0">
-              Preparation time: {{ time }} min
-            </p>
+          <div class="nutri-expand" :class="expand">
+            <div class="nutrients">
+              <ul class="nutrients-list">
+                <li class="nutrients-el">
+                  Energy: {{ totalNutrients.ENERC_KCAL.quantity.toFixed(0) }}
+                  {{ totalNutrients.ENERC_KCAL.unit }}
+                </li>
+                <li class="nutrients-el">
+                  Protein: {{ totalNutrients.PROCNT.quantity.toFixed(0) }}
+                  {{ totalNutrients.PROCNT.unit }}
+                </li>
+                <li class="nutrients-el">
+                  Fat: {{ totalNutrients.FAT.quantity.toFixed(0) }}
+                  {{ totalNutrients.FAT.unit }}
+                </li>
+                <li class="nutrients-el">
+                  Carbs: {{ totalNutrients.CHOCDF.quantity.toFixed(0) }}
+                  {{ totalNutrients.CHOCDF.unit }}
+                </li>
+                <li class="nutrients-el">
+                  Cholesterol: {{ totalNutrients.CHOLE.quantity.toFixed(0) }}
+                  {{ totalNutrients.CHOLE.unit }}
+                </li>
+                <li class="nutrients-el">
+                  Sugars: {{ totalNutrients.SUGAR.quantity.toFixed(0) }}
+                  {{ totalNutrients.SUGAR.unit }}
+                </li>
+                <li class="nutrients-el">
+                  Total weight: {{ totalWeight.toFixed(0) }} g
+                </li>
+              </ul>
+              <p class="prep-time" v-if="time !== 0">
+                Preparation time: {{ time }} min
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -118,7 +127,7 @@
   </section>
 </template>
 <script>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, inject } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { EDAMAM_ID } from "../../config.js";
@@ -139,6 +148,8 @@ export default {
 
     const recipes = store.getters["search/getSearchList"];
     const isLoading = ref(true);
+
+    const smallView = inject("small-view");
 
     /////////////////////////////////////////////////////////////////////// recipe elements
     const label = computed(function () {
@@ -230,7 +241,19 @@ export default {
         servingsInputFix.value = newVal;
       }
     });
+    /////////////////////////////////////////////////////////////////////// show nutrients on mobile
 
+    const showNutri = function () {
+      if (isNutri.value) {
+        expand.value = "";
+      } else {
+        expand.value = "expand";
+      }
+      isNutri.value = !isNutri.value;
+    };
+    const expand = ref("");
+
+    const isNutri = ref(false);
     /////////////////////////////////////////////////////////////////////// init
     const init = async function () {
       if (recipes.length !== 0) {
@@ -330,6 +353,10 @@ export default {
       failedFetch,
       bookmarked,
       setBookmark,
+      smallView,
+      showNutri,
+      isNutri,
+      expand,
     };
   },
 };
@@ -431,8 +458,25 @@ img:hover {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.26);
 }
 
-.grid-el-last {
-  /* grid-row */
+.nutri-btn {
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+.nutri-expand {
+  display: grid;
+  height: 0;
+  transition: all 0.3s ease-out;
+}
+.expand {
+  height: 12em;
+  transition: all 0.3s ease-out;
+}
+
+.nutrients {
+  min-height: 0;
+  overflow: hidden;
 }
 
 .ingredients-container {
@@ -481,7 +525,7 @@ img:hover {
 /* 1115 */
 @media (max-width: 69.68em) {
   .label {
-    margin: 0;
+    margin: 0 0 1rem;
   }
   .nutrients-list {
     margin-bottom: 1rem;
@@ -525,7 +569,7 @@ img:hover {
     /* height: 8/0%; */
   }
   .nutrients {
-    margin: 0 auto;
+    /* margin: 0 auto 3rem; */
   }
   .nutrients-list {
     margin: 0 auto;
@@ -564,5 +608,26 @@ img:hover {
     padding: 4rem 0 6rem 0;
   }
 }
+
+/* .nutri-transition-enter-from {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.nutri-transition-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+.nutri-transition-enter-active {
+  transition: all 0.6s ease-out;
+}
+.nutri-transition-leave-active {
+  transition: all 0.1s ease-in;
+}
+.nutri-transition-enter-to,
+.nutri-transition-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+} */
 </style>
 }

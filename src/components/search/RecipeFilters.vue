@@ -38,7 +38,7 @@
   <mobile-menu v-if="mobileMenuOpened" @close-mobile-menu="setMobileMenu">
     <div class="mobile-filter">
       <p>Filters:</p>
-      <div>
+      <div class="no-wrap">
         <input
           type="checkbox"
           id="vegetarian"
@@ -47,7 +47,7 @@
         />
         <label><base-badge type="vegetarian"></base-badge></label>
       </div>
-      <div>
+      <div class="no-wrap">
         <input
           type="checkbox"
           id="pescatarian"
@@ -56,7 +56,7 @@
         />
         <label><base-badge type="pescatarian"></base-badge></label>
       </div>
-      <div>
+      <div class="no-wrap">
         <input
           type="checkbox"
           id="egg-free"
@@ -65,7 +65,7 @@
         />
         <label><base-badge type="egg-free"></base-badge></label>
       </div>
-      <div>
+      <div class="no-wrap">
         <input
           type="checkbox"
           id="alcohol-free"

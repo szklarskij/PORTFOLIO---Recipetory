@@ -212,6 +212,10 @@ body {
   z-index: -1;
 } */
 
+.no-wrap {
+  white-space: nowrap;
+}
+
 /* transion */
 .route-enter-from {
   opacity: 0;
