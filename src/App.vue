@@ -1,4 +1,5 @@
 <template>
+  <div class="background"></div>
   <div id="container">
     <the-header></the-header>
     <div id="wrapper">
@@ -62,6 +63,21 @@ export default {
 
     watch(autoLogout, () => {
       router.replace("/search");
+    });
+    ////
+    let vh = window.innerHeight;
+    let vw = window.innerWidth;
+    const fixBackground = function () {
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+    fixBackground();
+
+    window.addEventListener("resize", () => {
+      if (vw !== window.innerWidth) {
+        vh = window.innerHeight;
+        vw = window.innerWidth;
+        fixBackground();
+      }
     });
 
     return { selectMobileInput };
@@ -133,6 +149,28 @@ body {
   position: relative;
   overflow-x: hidden;
 }
+/* body::before {
+  content: "";
+  position: fixed;
+  background-image: linear-gradient(#f7ffea69, #f7ffeac9),
+    url("./assets/background.webp");
+  background-size: cover;
+  background-position: center;
+  height: 100%;
+  width: 100%;
+  min-height: var(--vh);
+  left: 0;
+  top: 0;
+  will-change: transform;
+  z-index: -1;
+} */
+.background {
+  /* height: 100vh; Fallback for browsers that do not support Custom Properties */
+  height: var(--vh);
+  background-image: linear-gradient(#f7ffea69, #f7ffeac9),
+    url("./assets/background.webp");
+  background-size: cover;
+}
 
 #container {
   min-width: auto;
@@ -154,19 +192,25 @@ body {
   margin: 0;
   flex: 1;
   display: flex;
+  /* background: var(--text-light); */
 
   /* align-items: center; */
   justify-content: center;
-
+}
+/* .background {
   background-image: linear-gradient(#f7ffea69, #f7ffeac9),
     url("./assets/background.webp");
+  background-attachment: fixed;
   background-repeat: no-repeat;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-position: center;
-}
+  background-size: 100vmax;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+} */
 
 /* transion */
 .route-enter-from {
@@ -192,6 +236,12 @@ body {
 
 .padding {
   padding: 7.4rem 6.2rem;
+}
+
+@media (min-width: 69.68em) {
+  .background {
+    height: 100vh;
+  }
 }
 
 /* 612 */
