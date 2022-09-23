@@ -19,7 +19,10 @@
 @media (max-width: 69.68em) {
   .basic-container {
     width: unset;
-    min-width: 95vw;
+    border-radius: 0;
+    min-width: 100vw;
+    /* min-height: 100%; */
+    margin: 0;
   }
 }
 /* 830 */

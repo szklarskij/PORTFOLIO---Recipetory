@@ -19,6 +19,7 @@
 </template>
 <style scoped>
 footer {
+  z-index: 2;
   overscroll-behavior: none;
   position: static;
   display: flex;

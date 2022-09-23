@@ -3,72 +3,84 @@
     <div v-if="isLoading && !failedFetch">
       <base-spinner></base-spinner>
     </div>
-    <transition-group tag="ul" name="search-transition">
-      <base-container v-if="!isLoading && !failedFetch" class="">
-        <div class="padding error" v-if="!recipesLoaded">
-          <ion-icon name="alert-circle-outline"></ion-icon>
-          <div>
-            <h2>Recipes not found!</h2>
-            <p>Please input another keywords</p>
-          </div>
-        </div>
-        <div class="padding" v-else>
-          <h2>Recipes has been found!</h2>
-          <p>Showing results of "{{ searchString }}"</p>
-          <div :class="fixButtons">
-            <recipe-sort></recipe-sort>
-            <recipe-filters></recipe-filters>
-          </div>
-          <transition-group tag="ul" name="recipe-list">
-            <recipe-item
-              v-for="recipe in recipes"
-              :key="recipe.id"
-              :label="recipe.label"
-              :image="recipe.image"
-              :source="recipe.source"
-              :healthLabels="recipe.healthLabels"
-              :id="recipe.id"
-            ></recipe-item>
-          </transition-group>
-          <div
-            v-if="recipes.length === 0 && recipesLoaded"
-            class="zero-filters"
-          >
-            No recipes that meet the conditions
-          </div>
-          <div class="pagination">
-            <div class="prev-btn">
-              <base-button
-                @click="prevPage"
-                mode="outline"
-                v-if="prevButtonVisible"
-                >Previous</base-button
-              >
-            </div>
-            <p class="pages" v-if="prevButtonVisible || nextButtonVisible">
-              {{ currPageShow }}/{{ numOfPagesShow }}
-            </p>
-            <div class="next-btn">
-              <base-button
-                @click="nextPage"
-                mode="outline"
-                v-if="nextButtonVisible"
-                >Next</base-button
-              >
+    <div v-else-if="!isLoading">
+      <transition-group tag="ul" name="search-transition">
+        <base-container
+          v-if="!isLoading && !failedFetch && !recipesLoaded"
+          class=""
+          key="not-found"
+        >
+          <div class="padding error">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <div>
+              <h2>Recipes not found!</h2>
+              <p>Please input another keywords</p>
             </div>
           </div>
-        </div>
-      </base-container>
-      <base-container v-else-if="failedFetch">
-        <div class="padding error">
-          <ion-icon name="alert-circle-outline"></ion-icon>
-          <div>
-            <h2>Something went wrong!</h2>
-            <p>Check your internet connnection and try again.</p>
+        </base-container>
+        <base-container
+          key="found"
+          v-else-if="!isLoading && !failedFetch && recipesLoaded"
+        >
+          <div class="padding">
+            <h2>Recipes has been found!</h2>
+            <p>Showing results of "{{ searchString }}"</p>
+            <div :class="fixButtons">
+              <recipe-sort></recipe-sort>
+              <recipe-filters></recipe-filters>
+            </div>
+            <transition-group tag="ul" name="recipe-list">
+              <recipe-item
+                v-for="recipe in recipes"
+                :key="recipe.id"
+                :label="recipe.label"
+                :image="recipe.image"
+                :source="recipe.source"
+                :healthLabels="recipe.healthLabels"
+                :id="recipe.id"
+              ></recipe-item>
+              <div key="helper" class="margin-helper"></div>
+            </transition-group>
+            <div
+              v-if="recipes.length === 0 && recipesLoaded"
+              class="zero-filters"
+            >
+              No recipes that meet the conditions
+            </div>
+            <div class="pagination">
+              <div class="prev-btn">
+                <base-button
+                  @click="prevPage"
+                  mode="outline"
+                  v-if="prevButtonVisible"
+                  >Previous</base-button
+                >
+              </div>
+              <p class="pages" v-if="prevButtonVisible || nextButtonVisible">
+                {{ currPageShow }}/{{ numOfPagesShow }}
+              </p>
+              <div class="next-btn">
+                <base-button
+                  @click="nextPage"
+                  mode="outline"
+                  v-if="nextButtonVisible"
+                  >Next</base-button
+                >
+              </div>
+            </div>
           </div>
-        </div>
-      </base-container>
-    </transition-group>
+        </base-container>
+        <base-container key="failed" v-else-if="failedFetch">
+          <div class="padding error">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <div>
+              <h2>Something went wrong!</h2>
+              <p>Check your internet connnection and try again.</p>
+            </div>
+          </div>
+        </base-container>
+      </transition-group>
+    </div>
   </section>
 </template>
 <script>
@@ -351,7 +363,7 @@ p {
 p {
   justify-self: center;
 }
-ul {
+.margin-helper {
   padding: 0;
   margin-bottom: 4rem;
 }

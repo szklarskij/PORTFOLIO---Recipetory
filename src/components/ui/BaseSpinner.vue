@@ -15,11 +15,12 @@
 
 <style scoped>
 .spinner {
+  /* position: absolute; */
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 90vh;
+  height: 100%;
 }
 
 .lds-roller {

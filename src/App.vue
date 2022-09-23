@@ -68,7 +68,7 @@ export default {
     let vh = window.innerHeight;
     let vw = window.innerWidth;
     const fixBackground = function () {
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
+      document.documentElement.style.setProperty("--vh", `${vh + vh / 10}px`);
     };
     fixBackground();
 
@@ -140,10 +140,10 @@ html {
   font-size: 62.5%;
   overflow-y: scroll;
   overflow-x: hidden;
-  background-color: var(--color-grad-1);
 }
 
 body {
+  background-color: var(--text-light);
   font-size: 1.6rem;
   min-height: 100vh;
   position: relative;
@@ -164,13 +164,14 @@ body {
   will-change: transform;
   z-index: -1;
 } */
-.background {
-  /* height: 100vh; Fallback for browsers that do not support Custom Properties */
+/* .background {
+
   height: var(--vh);
+  overflow: none;
   background-image: linear-gradient(#f7ffea69, #f7ffeac9),
     url("./assets/background.webp");
   background-size: cover;
-}
+} */
 
 #container {
   min-width: auto;
@@ -241,16 +242,21 @@ body {
 .padding {
   padding: 7.4rem 6.2rem;
 }
-
+/* 1115 */
 @media (min-width: 69.68em) {
-  .background {
-    height: 100vh;
+  body {
+    background-image: linear-gradient(#f7ffea69, #f7ffeac9),
+      url("./assets/background.webp");
+    background-size: cover;
+  }
+  #wrapper {
+    align-items: center;
   }
 }
 
-/* 612 */
+/* 1115 */
 
-@media (max-width: 38.25em) {
+@media (max-width: 69.68em) {
   #wrapper {
     align-items: center;
   }
@@ -263,16 +269,10 @@ body {
   }
 }
 
-/* 405 */
-@media (max-width: 25.31em) {
-  .padding {
-    padding: 3.6rem 3.2rem;
-  }
-}
 /* 360 */
 @media (max-width: 20em) {
   .padding {
-    padding: 2.5rem 1rem;
+    padding: 2.5rem 3rem;
   }
 }
 
