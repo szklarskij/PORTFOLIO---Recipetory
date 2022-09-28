@@ -193,9 +193,7 @@ header {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.26);
   overflow-x: none;
   z-index: 2;
-  /* display: flex; */
-  /* justify-content: center; */
-  /* align-items: center; */
+
 }
 
 header a,
@@ -237,7 +235,7 @@ form {
   margin-right: 2rem;
 }
 input {
-  /* background-color: var(--backgroud-color); */
+
   color: var(--text-dark);
   padding: 1rem;
   width: 30rem;
@@ -254,7 +252,7 @@ input:focus {
   transform: scaleX(1.1);
   transform-origin: right;
   transition: transform 0.3s ease;
-  /* border-width: thin; */
+
 }
 
 header nav {

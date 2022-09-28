@@ -83,7 +83,6 @@ export default {
     });
 
     const focus = function () {
-      // console.log(smallView);
       if (!smallView.value) {
         document.getElementById("searchBtn").focus();
       } else {
@@ -108,9 +107,6 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  /* height: 50vh; */
-  /* min-height: 35vh; */
-  /* padding: 2rem; */
 }
 ion-icon {
   color: inherit;

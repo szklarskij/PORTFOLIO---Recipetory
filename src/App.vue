@@ -109,29 +109,22 @@ export default {
     var(--color-grad-1),
     var(--color-grad-2)
   );
-
-  --color-grey-light-1: #f9f5f3;
-  --color-grey-light-2: #f2efee;
-  --color-grey-light-3: #d3c7c3;
-  --color-grey-dark-1: #615551;
-  --color-grey-dark-2: #918581;
-
-  --large: 78.15em;
-  --medium: 61.25em;
-  --small: 37.5em;
-  --smallest: 31.25em;
-  /*
- // 1250px
- // 980px
- // 600px
- // 500px
- */
 }
 
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+*:focus {
+  outline: none !important;
 }
 
 html {
@@ -149,29 +142,6 @@ body {
   position: relative;
   overflow-x: hidden;
 }
-/* body::before {
-  content: "";
-  position: fixed;
-  background-image: linear-gradient(#f7ffea69, #f7ffeac9),
-    url("./assets/background.webp");
-  background-size: cover;
-  background-position: center;
-  height: 100%;
-  width: 100%;
-  min-height: var(--vh);
-  left: 0;
-  top: 0;
-  will-change: transform;
-  z-index: -1;
-} */
-/* .background {
-
-  height: var(--vh);
-  overflow: none;
-  background-image: linear-gradient(#f7ffea69, #f7ffeac9),
-    url("./assets/background.webp");
-  background-size: cover;
-} */
 
 #container {
   min-width: auto;
@@ -193,25 +163,21 @@ body {
   margin: 0;
   flex: 1;
   display: flex;
-  /* background: var(--text-light); */
 
-  /* align-items: center; */
+  flex-direction: column;
+  align-items: center;
+
   justify-content: center;
 }
-/* .background {
-  background-image: linear-gradient(#f7ffea69, #f7ffeac9),
-    url("./assets/background.webp");
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: 100vmax;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
-} */
+
+#wrapper::before {
+  content: "";
+  flex: 1;
+}
+#wrapper::after {
+  content: "";
+  flex: 3;
+}
 
 .no-wrap {
   white-space: nowrap;
@@ -240,7 +206,7 @@ body {
 }
 
 .padding {
-  padding: 7.4rem 6.2rem;
+  padding: 6.2rem;
 }
 /* 1115 */
 @media (min-width: 69.68em) {
@@ -249,37 +215,12 @@ body {
       url("./assets/background.webp");
     background-size: cover;
   }
-  #wrapper {
-    align-items: center;
-  }
 }
 
-/* 1115 */
-
-@media (max-width: 69.68em) {
-  #wrapper {
-    align-items: center;
-  }
-}
-
-/* 830 */
-@media (max-width: 51.87em) {
+/* 620 */
+@media (max-width: 38.25em) {
   .padding {
-    padding: 4.4rem 3.2rem;
-  }
-}
-
-/* 360 */
-@media (max-width: 20em) {
-  .padding {
-    padding: 2.5rem 3rem;
-  }
-}
-
-@media only screen and (max-device-height: 1024px) and (max-device-width: 1024px) {
-  .palette-primary.custom-background,
-  .boldgrid-section.background-fixed {
-    background-attachment: scroll !important;
+    padding: 2.5rem 1rem;
   }
 }
 </style>

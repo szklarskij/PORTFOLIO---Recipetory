@@ -3,7 +3,7 @@
     <div class="image">
       <img :src="image" :alt="label" width="150" height="150" />
     </div>
-    <div>
+    <div class="item-label">
       <h3>{{ label }}</h3>
       <p>By: {{ source }}</p>
     </div>
@@ -49,9 +49,9 @@ li {
   padding: 0;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  /* padding: 1rem; */
+
   margin: 1rem auto;
-  /* max-width: 60rem; */
+
   transition: transform 0.6s ease;
 }
 
@@ -71,15 +71,16 @@ li:active {
   transform: translateX(-1rem);
 }
 img {
-  /* border-radius: 50%; */
-  /* overflow: hidden; */
   object-fit: contain;
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
-  height: 100%;
+  height: 15rem;
+  width: auto;
 }
 .image {
   grid-row: 1/3;
+  height: 15rem;
+  width: auto;
 }
 .badges {
   grid-column: -2/-1;
@@ -87,15 +88,41 @@ img {
 div {
   display: block;
 }
-/* 720*/
-@media (max-width: 45em) {
-  li {
-    gap: 1rem;
+
+/* 1115 */
+@media (max-width: 69.68em) {
+  li:hover,
+  li:active {
+    cursor: pointer;
+    transition: none;
+    transform: none;
   }
 }
+
 /* 612 */
 
 @media (max-width: 38.25em) {
+}
+/* 520 */
+@media (max-width: 32.5em) {
+  .image {
+    grid-row: 1/2;
+    align-self: flex-start;
+    height: 120px;
+  }
+  .badges {
+    justify-content: center;
+    padding: 1rem 2rem;
+    grid-column: 1/-1;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    background-color: var(--text-light);
+  }
+  img {
+    width: 120px;
+    height: 120px;
+    border-bottom-left-radius: 0;
+  }
   h3 {
     margin-top: 0.5rem;
     font-size: 2rem;
@@ -105,24 +132,8 @@ div {
     margin-bottom: 1rem;
   }
   li {
-    gap: 0.8rem;
-  }
-}
-/* 520 */
-@media (max-width: 32.5em) {
-  .image {
-    grid-row: 1/2;
-    align-self: flex-start;
-    /* height: 80%; */
-  }
-  .badges {
-    justify-content: center;
-    margin: 0 2rem 1rem;
-    grid-column: 1/-1;
-  }
-  img {
-    width: 120px;
-    border-bottom-left-radius: 0;
+    gap: 0rem;
+    column-gap: 0.6rem;
   }
 }
 </style>

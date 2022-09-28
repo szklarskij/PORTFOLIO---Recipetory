@@ -232,9 +232,6 @@ input {
 label {
   font-size: 2rem;
 }
-.button {
-  margin-top: 1rem;
-}
 
 .mobile-filter {
   color: var(--text-light);
@@ -242,7 +239,6 @@ label {
   margin: auto;
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
 }
 
 .mobile-filter p {
@@ -261,8 +257,5 @@ label {
   -webkit-transform: scale(2);
   transform: scale(2);
   accent-color: unset;
-}
-.mobile-filter input:focus {
-  /* accent-color: var(--color-grad-2); */
 }
 </style>

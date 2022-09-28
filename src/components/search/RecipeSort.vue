@@ -224,9 +224,6 @@ export default {
 .sort-options .sort-type {
   margin-left: 4rem;
 }
-.button {
-  margin-top: 1rem;
-}
 
 .mobile-sort {
   color: var(--text-light);

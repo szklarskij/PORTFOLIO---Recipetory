@@ -58,9 +58,9 @@ li {
   padding: 0;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  /* padding: 1rem; */
+
   margin: 1rem auto;
-  /* max-width: 60rem; */
+
   transition: 0.6s ease;
   width: 100%;
 }
@@ -81,8 +81,6 @@ li:active {
   transform: translateX(-1rem);
 }
 img {
-  /* border-radius: 50%; */
-  /* overflow: hidden; */
   object-fit: contain;
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;

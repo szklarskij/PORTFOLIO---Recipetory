@@ -43,7 +43,6 @@ div {
   gap: 1rem;
 }
 a {
-  /* margin-left: 0.3rem; */
   color: inherit;
 }
 

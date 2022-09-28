@@ -15,7 +15,6 @@
 
 <style scoped>
 .spinner {
-  /* position: absolute; */
   display: flex;
   justify-content: center;
   align-items: center;

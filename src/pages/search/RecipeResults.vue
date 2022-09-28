@@ -380,6 +380,7 @@ ion-icon {
 
 .fix-buttons {
   display: flex;
+  margin: 2rem 0;
 }
 
 .search-transition-enter-from {
@@ -430,21 +431,6 @@ ion-icon {
   transition: transform 0.8s ease;
 }
 
-@media (max-width: 76.25em) {
-}
-/* 1115 */
-@media (max-width: 69.68em) {
-}
-/* 830 */
-@media (max-width: 51.87em) {
-}
-/* 720*/
-@media (max-width: 45em) {
-}
-/* 612 */
-
-@media (max-width: 38.25em) {
-}
 /* 520 */
 
 @media (max-width: 32.5em) {
@@ -456,12 +442,6 @@ ion-icon {
 @media (max-width: 25.31em) {
   h2 {
     font-size: 2.4rem;
-  }
-}
-/* 320 */
-@media (max-width: 20em) {
-  .basic-container {
-    width: 27rem;
   }
 }
 </style>

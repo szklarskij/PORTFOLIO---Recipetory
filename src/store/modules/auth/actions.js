@@ -54,10 +54,12 @@ export default {
     localStorage.setItem("token", responseData.idToken);
     localStorage.setItem("userId", responseData.localId);
     localStorage.setItem("tokenExpiration", expirationDate);
+    localStorage.setItem("userMail", payload.email);
 
     context.commit("setUser", {
       token: responseData.idToken,
       userId: responseData.localId,
+      userMail: payload.email,
     });
     context.dispatch("favourites/fetchFavourites", "_", { root: true });
   },
@@ -65,6 +67,7 @@ export default {
   tryLogin(context) {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
+    const userMail = localStorage.getItem("userMail");
     const tokenExpieration = localStorage.getItem("tokenExpiration");
 
     const expiresIn = +tokenExpieration - new Date().getTime();
@@ -81,6 +84,7 @@ export default {
       context.commit("setUser", {
         token: token,
         userId: userId,
+        userMail: userMail,
       });
       context.dispatch("favourites/fetchFavourites", "_", { root: true });
     }
@@ -90,6 +94,7 @@ export default {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("tokenExpiration");
+    localStorage.removeItem("userMail");
     context.dispatch("favourites/resetFavourites", "_", { root: true });
 
     clearTimeout(timer);

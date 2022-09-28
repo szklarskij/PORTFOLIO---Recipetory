@@ -32,7 +32,6 @@ export default {
   },
   forceFetch(state) {
     state.forceFetch++;
-    // console.log(state.forceFetch);
   },
   clearInput(state) {
     state.clearInput = true;
@@ -45,7 +44,6 @@ export default {
     state.numberOfPages = payload;
   },
   listChange(state) {
-    console.log("mutation listchange");
     state.listChange++;
   },
   setUrl(state, payload) {

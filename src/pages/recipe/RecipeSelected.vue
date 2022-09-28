@@ -41,6 +41,7 @@
           </div>
           <div class="nutri-expand" :class="expand">
             <div class="nutrients">
+              <h3 class="nutri-label">Nutrients per one serving</h3>
               <ul class="nutrients-list">
                 <li class="nutrients-el">
                   Energy: {{ totalNutrients.ENERC_KCAL.quantity.toFixed(0) }}
@@ -70,21 +71,22 @@
                   Total weight: {{ totalWeight.toFixed(0) }} g
                 </li>
               </ul>
-              <p class="prep-time" v-if="time !== 0">
-                Preparation time: {{ time }} min
-              </p>
             </div>
           </div>
         </div>
       </div>
       <div class="ingredients-container">
-        <p class="title">
+        <p class="prep-time" v-if="time !== 0">
+          Preparation time: {{ time }} min
+        </p>
+
+        <h3 class="title">
           <span>Recipe ingredients per</span
           ><span
             ><input type="number" min="1" max="20" v-model="servingsInput" />
-            servings</span
+            {{ servingsInput === 1 ? "serving" : "servings" }}</span
           >
-        </p>
+        </h3>
 
         <div class="ingredients">
           <ul class="igredients-list">
@@ -114,9 +116,125 @@
           </ul>
           <div></div>
         </div>
+      </div>
+      <div class="link-to-recipe">
+        <base-button url :urlto="url">Go to the recipe's page!</base-button>
+      </div>
+      <div class="rating-container">
+        <div>
+          <h3 class="rating-label">Rate this recipe</h3>
+          <div class="rating-stars">
+            <div
+              class="star-container"
+              @mouseover="setStars(1)"
+              @mouseleave="hoverStarLeave"
+              @click="rate(1)"
+            >
+              <ion-icon
+                v-if="star1 !== 'star-active'"
+                :class="star1"
+                name="star-outline"
+              ></ion-icon>
+              <ion-icon v-else :class="star1" name="star"></ion-icon>
+            </div>
+            <div
+              class="star-container"
+              @mouseover="setStars(2)"
+              @mouseleave="hoverStarLeave"
+              @click="rate(2)"
+            >
+              <ion-icon
+                v-if="star2 !== 'star-active'"
+                :class="star2"
+                name="star-outline"
+              ></ion-icon>
 
-        <div class="link-to-recipe">
-          <base-button url :urlto="url">Go to the recipe's page!</base-button>
+              <ion-icon v-else :class="star2" name="star"></ion-icon>
+            </div>
+            <div
+              class="star-container"
+              @click="rate(3)"
+              @mouseover="setStars(3)"
+              @mouseleave="hoverStarLeave"
+            >
+              <ion-icon
+                v-if="star3 !== 'star-active'"
+                :class="star3"
+                name="star-outline"
+              ></ion-icon>
+              <ion-icon v-else :class="star3" name="star"></ion-icon>
+            </div>
+            <div
+              class="star-container"
+              @click="rate(4)"
+              @mouseover="setStars(4)"
+              @mouseleave="hoverStarLeave"
+            >
+              <ion-icon
+                :class="star4"
+                v-if="star4 !== 'star-active'"
+                name="star-outline"
+              ></ion-icon>
+              <ion-icon :class="star4" v-else name="star"></ion-icon>
+            </div>
+            <div
+              class="star-container"
+              @click="rate(5)"
+              @mouseover="setStars(5)"
+              @mouseleave="hoverStarLeave"
+            >
+              <ion-icon
+                :class="star5"
+                v-if="star5 !== 'star-active'"
+                name="star-outline"
+              ></ion-icon>
+              <ion-icon :class="star5" v-else name="star"></ion-icon>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <h3 class="rating-label no-wrap">Current rating by users</h3>
+            <span class="rating-average">{{
+              recipeScore ? recipeScore + "/5" : "N/A"
+            }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="opinion-padding">
+        <div class="opinion-container">
+          <h3 v-if="opinions.length > 0" class="opinion-label">
+            User opinions
+          </h3>
+          <h3 v-else class="opinion-label">No user opinions</h3>
+          <ul class="opinion-list">
+            <li
+              class="opinion-list-el"
+              v-for="opinion in opinions"
+              :key="opinion.user + opinion.time"
+            >
+              <div class="opinion-header">
+                <p>{{ opinion.user }}</p>
+              </div>
+              <p class="opinion-body">{{ opinion.opinion }}</p>
+            </li>
+            <p v-if="!isAuth" key="a">Please log in to add a new opinion</p>
+          </ul>
+        </div>
+        <div v-if="isAuth" class="opinion-container">
+          <h3 class="opinion-label">Add a new opinion</h3>
+          <div class="opinion-flex">
+            <form class="opinion-form" @submit.prevent="postOpinion">
+              <textarea
+                class="add-opinion-text"
+                rows="3"
+                v-model.trim="opinionInput"
+              ></textarea>
+              <base-button @click="postOpinion" styleMode="outline"
+                >Post</base-button
+              >
+            </form>
+          </div>
         </div>
       </div>
     </base-container>
@@ -141,6 +259,10 @@ export default {
     const onImgLoad = function () {
       imageLoaded.value = true;
     };
+
+    const isAuth = computed(function () {
+      return store.getters["auth/isAuthenticated"];
+    });
 
     const imageLoaded = ref(false);
     const failedFetch = ref(false);
@@ -254,10 +376,167 @@ export default {
     const expand = ref("");
 
     const isNutri = ref(false);
+    if (!smallView.value) expand.value = "expand";
+
+    const sV = computed(function () {
+      return smallView.value;
+    });
+    watch(sV, function () {
+      expand.value = "expand";
+      isNutri.value = true;
+    });
+    /////////////////////////////////////////////////////////////////////// rating
+
+    const star1 = ref("");
+    const star2 = ref("");
+    const star3 = ref("");
+    const star4 = ref("");
+    const star5 = ref("");
+
+    const setStars = function (s) {
+      if (s === 1) {
+        star1.value = "star-active";
+        star2.value = "";
+        star3.value = "";
+        star4.value = "";
+        star5.value = "";
+      } else if (s === 2) {
+        star1.value = "star-active";
+        star2.value = "star-active";
+        star3.value = "";
+        star4.value = "";
+        star5.value = "";
+      } else if (s === 3) {
+        star1.value = "star-active";
+        star2.value = "star-active";
+        star3.value = "star-active";
+        star4.value = "";
+        star5.value = "";
+      } else if (s === 4) {
+        star1.value = "star-active";
+        star2.value = "star-active";
+        star3.value = "star-active";
+        star4.value = "star-active";
+        star5.value = "";
+      } else if (s === 5) {
+        star1.value = "star-active";
+        star2.value = "star-active";
+        star3.value = "star-active";
+        star4.value = "star-active";
+        star5.value = "star-active";
+      }
+    };
+
+    const hoverStarLeave = function () {
+      if (!userScore.value) {
+        star1.value = "";
+        star2.value = "";
+        star3.value = "";
+        star4.value = "";
+        star5.value = "";
+      }
+
+      if (userScore.value === 1) {
+        star1.value = "star-active";
+        star2.value = "";
+        star3.value = "";
+        star4.value = "";
+        star5.value = "";
+      } else if (userScore.value === 2) {
+        star1.value = "star-active";
+        star2.value = "star-active";
+        star3.value = "";
+        star4.value = "";
+        star5.value = "";
+      } else if (userScore.value === 3) {
+        star1.value = "star-active";
+        star2.value = "star-active";
+        star3.value = "star-active";
+        star4.value = "";
+        star5.value = "";
+      } else if (userScore.value === 4) {
+        star1.value = "star-active";
+        star2.value = "star-active";
+        star3.value = "star-active";
+        star4.value = "star-active";
+        star5.value = "";
+      } else if (userScore.value === 5) {
+        star1.value = "star-active";
+        star2.value = "star-active";
+        star3.value = "star-active";
+        star4.value = "star-active";
+        star5.value = "star-active";
+      }
+    };
+
+    const rate = async function (r) {
+      if (!store.getters["auth/isAuthenticated"]) {
+        router.push("/auth");
+      } else {
+        try {
+          await store.dispatch("recipe/addRating", [r, thisRecipe.id]);
+          checkUserRating();
+          store.dispatch("recipe/loadRecipeRating", thisRecipe.id);
+        } catch (error) {
+          store.dispatch("search/setError", "Failed to send rating to server");
+        }
+      }
+    };
+
+    const recipeScore = computed(function () {
+      return store.getters["recipe/getRecipeRating"];
+    });
+    const userScore = computed(function () {
+      return store.getters["recipe/getUserRating"];
+    });
+
+    const checkUserRating = async function () {
+      try {
+        await store.dispatch("recipe/loadUserRating", thisRecipe.id);
+        await store.dispatch("recipe/loadRecipeRating", thisRecipe.id);
+
+        setStars(userScore.value);
+      } catch (error) {
+        store.dispatch(
+          "search/setError",
+          "Failed to load user's rating from server"
+        );
+      }
+    };
+    /////////////////////////////////////////////////////////////////////// opinions
+    const opinions = computed(function () {
+      return store.getters["recipe/getOpinions"];
+    });
+    const opinionInput = ref("");
+
+    const postOpinion = async function () {
+      if (isAuth.value && opinionInput.value !== "") {
+        try {
+          const opinion = opinionInput.value;
+          opinionInput.value = "";
+          await store.dispatch("recipe/postOpinion", [opinion, thisRecipe.id]);
+
+          getOpinions();
+        } catch (error) {
+          store.dispatch("search/setError", error);
+        }
+      }
+    };
+    const getOpinions = async function () {
+      try {
+        await store.dispatch("recipe/getOpinions", thisRecipe.id);
+      } catch (error) {
+        store.dispatch(
+          "search/setError",
+          "Failed to load users' opinions from server"
+        );
+      }
+    };
     /////////////////////////////////////////////////////////////////////// init
     const init = async function () {
       if (recipes.length !== 0) {
         thisRecipe = recipes.find((recipe) => recipe.id === route.params.id);
+
         loadImage();
       } else if (store.getters["recipe/getRecipe"]) {
         thisRecipe = store.getters["recipe/getRecipe"];
@@ -307,6 +586,7 @@ export default {
             };
 
             store.dispatch("recipe/setRecipe", thisRecipe);
+
             loadImage();
           }
         } catch (error) {
@@ -315,6 +595,8 @@ export default {
           store.dispatch("search/setError", error);
         }
       }
+      checkUserRating();
+      getOpinions();
     };
     const loadImage = function () {
       try {
@@ -330,7 +612,7 @@ export default {
       }
     };
     /////////////////////////////////////////////////////////////////////// DEMO
-
+    store.dispatch("recipe/resetOpinionAndRate");
     init();
     return {
       isLoading,
@@ -357,6 +639,19 @@ export default {
       showNutri,
       isNutri,
       expand,
+      setStars,
+      hoverStarLeave,
+      star1,
+      star2,
+      star3,
+      star4,
+      star5,
+      rate,
+      recipeScore,
+      opinions,
+      isAuth,
+      opinionInput,
+      postOpinion,
     };
   },
 };
@@ -424,16 +719,13 @@ img {
   background-color: red;
   display: flex;
   overflow: hidden;
-  /* height: 100%; */
-  /* width: 40rem; */
-  /* -webkit-transition: 0.6s ease; */
+
   transition: 0.6s ease;
   grid-row: 1/3;
-  /* max-width: 100%;
-  min-width: 100%; */
 }
 
-img:hover {
+img:hover,
+img:active {
   -webkit-transition: 0.6s ease;
   transition: 0.6s ease;
   transform: scale(1.5);
@@ -462,7 +754,6 @@ img:hover {
   display: flex;
   justify-items: center;
   justify-content: center;
-  margin-bottom: 3rem;
 }
 .nutri-expand {
   display: grid;
@@ -470,7 +761,7 @@ img:hover {
   transition: all 0.3s ease-out;
 }
 .expand {
-  height: 12em;
+  height: 14em;
   transition: all 0.3s ease-out;
 }
 
@@ -478,15 +769,19 @@ img:hover {
   min-height: 0;
   overflow: hidden;
 }
+.nutri-label {
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
 
 .ingredients-container {
   display: flex;
   flex-direction: column;
-  padding: 4rem 8rem 6rem 8rem;
+  padding: 4rem 8rem 0 8rem;
 }
 
 .ingredients {
-  margin: 4rem 5rem 4rem 5rem;
+  margin: 4rem 4rem 6rem 4rem;
 }
 
 .nutrients-list {
@@ -503,7 +798,8 @@ img:hover {
 .prep-time {
   font-weight: 600;
   font-size: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 4rem;
+  text-align: center;
 }
 
 .igredients-list {
@@ -513,17 +809,105 @@ img:hover {
   list-style: none;
   padding: 0;
   margin: 0;
+  transform: translateX(10%);
 }
 .igredients-el {
   margin: 0;
   font-size: 1.6rem;
 }
 .link-to-recipe {
-  align-self: center;
+  text-align: center;
+  margin-bottom: 6rem;
+}
+.rating-container {
+  justify-content: space-around;
+  display: flex;
+  margin-bottom: 6rem;
+}
+.rating-label {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.rating-stars {
+  display: flex;
+  justify-content: center;
+  /* margin: 0 6vw; */
+  color: lightgray;
+  margin-bottom: 3rem;
+}
+.rating-stars ion-icon {
+  font-size: 3rem;
+  margin-top: 0.5rem;
+}
+.star-container {
+  cursor: pointer;
+}
+.star-active {
+  color: var(--text-dark);
+}
+.star-container {
+  min-width: 6rem;
+  display: flex;
+  /* flex: 1; */
+  justify-content: center;
+}
+.rating-average {
+  font-size: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.opinion-container {
+  display: flex;
+  flex-direction: column;
+
+  margin: 0 4rem 6rem 4rem;
+}
+
+.opinion-list {
+  display: flex;
+  flex-direction: column;
+}
+.opinion-list-el {
+  list-style: none;
+}
+.opinion-label {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+.opinion-header {
+  font-weight: 700;
+}
+.opinion-body {
+  margin-bottom: 2rem;
+}
+.opinion-flex {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-around; */
+  margin-bottom: 3rem;
+  gap: 1rem;
+}
+.add-opinion-text {
+  width: 100%;
+  font-size: 1.4rem;
+}
+.opinion-form {
+  display: flex;
+  /* width: 100vw; */
+  gap: 1rem;
+}
+.opinion-padding {
+  padding-bottom: 2rem;
 }
 
 /* 1115 */
 @media (max-width: 69.68em) {
+  .rating-container {
+    flex-direction: column;
+  }
+
   .label {
     margin: 0 0 1rem;
   }
@@ -541,7 +925,11 @@ img:hover {
 /* 830 */
 @media (max-width: 51.87em) {
   .ingredients {
-    margin: 4rem 2rem 4rem 2rem;
+    margin: 4rem 2rem 6rem 2rem;
+  }
+
+  .igredients-list {
+    transform: translateX(0);
   }
 }
 
@@ -568,9 +956,7 @@ img:hover {
     border-top-left-radius: 0px;
     /* height: 8/0%; */
   }
-  .nutrients {
-    /* margin: 0 auto 3rem; */
-  }
+
   .nutrients-list {
     margin: 0 auto;
     display: flex;
@@ -585,10 +971,20 @@ img:hover {
   .ingredients-container {
     display: flex;
     flex-direction: column;
-    padding: 4rem 4rem 6rem 4rem;
+    padding: 4rem 4rem 0 4rem;
   }
   .nutrients-el {
     align-self: center;
+  }
+
+  .nutri-btn {
+    margin-bottom: 3rem;
+  }
+  .nutri-label {
+    text-align: center;
+  }
+  .opinion-label {
+    text-align: center;
   }
 }
 
@@ -605,29 +1001,21 @@ img:hover {
     margin: 0 2rem;
   }
   .ingredients-container {
-    padding: 4rem 0 6rem 0;
+    padding: 4rem 0 0 0;
+  }
+
+  .opinion-flex {
+    flex-direction: column;
+  }
+  .opinion-container {
+    margin: 3rem 1rem;
   }
 }
 
-/* .nutri-transition-enter-from {
-  opacity: 0;
-  transform: translateY(-30px);
+@media (max-width: 20em) {
+  .star-container {
+    min-width: 5rem;
+  }
 }
-.nutri-transition-leave-to {
-  opacity: 0;
-  transform: translateY(-30px);
-}
-
-.nutri-transition-enter-active {
-  transition: all 0.6s ease-out;
-}
-.nutri-transition-leave-active {
-  transition: all 0.1s ease-in;
-}
-.nutri-transition-enter-to,
-.nutri-transition-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-} */
 </style>
 }

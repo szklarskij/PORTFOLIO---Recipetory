@@ -62,7 +62,7 @@ export default {
       recipeArr.push(recipe);
     });
 
-    console.log(recipeArr);
+
 
     context.commit("setSearchList", recipeArr);
     context.commit("setUnsortedList", unsortedRecipeArr);

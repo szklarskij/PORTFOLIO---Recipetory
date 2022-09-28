@@ -52,11 +52,6 @@ export default {
 
 .close-btn {
   justify-self: flex-end;
-  /* width: 100vh; */
-  /* position: fixed;
-  top: 2%;
-  right: 5%;
-  z-index: 99; */
 }
 .close-btn ion-icon {
   font-size: 8rem;
