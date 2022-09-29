@@ -497,6 +497,7 @@ export default {
 
         setStars(userScore.value);
       } catch (error) {
+        isLoading.value = false;
         store.dispatch(
           "search/setError",
           "Failed to load user's rating from server"
@@ -518,6 +519,7 @@ export default {
 
           getOpinions();
         } catch (error) {
+          isLoading.value = false;
           store.dispatch("search/setError", error);
         }
       }
@@ -526,6 +528,7 @@ export default {
       try {
         await store.dispatch("recipe/getOpinions", thisRecipe.id);
       } catch (error) {
+        isLoading.value = false;
         store.dispatch(
           "search/setError",
           "Failed to load users' opinions from server"
@@ -547,7 +550,6 @@ export default {
             `https://api.edamam.com/api/recipes/v2/${route.params.id}?type=public&app_id=${EDAMAM_ID}&app_key=${EDAMAM_KEY}`
           );
 
-          ////label arr do configa
           let filteredLabels = [];
 
           const data = await response.json();
@@ -609,6 +611,7 @@ export default {
         };
       } catch (error) {
         store.dispatch("search/setError", error);
+        isLoading.value = false;
       }
     };
     /////////////////////////////////////////////////////////////////////// DEMO
@@ -777,7 +780,7 @@ img:active {
 .ingredients-container {
   display: flex;
   flex-direction: column;
-  padding: 4rem 8rem 0 8rem;
+  padding: 6rem 8rem 0 8rem;
 }
 
 .ingredients {

@@ -1,29 +1,40 @@
-# recipe
+# RECIPETORY
 
-## Project setup
+## Aplikacja do wyszukiwania przepisów kulinarnych.
 
-```
-npm install
-```
+Projekt przedstawia zdobyte umiejętności po ukończeniu kursu "Vue - The Complete Guide (incl. Router & Composition API) - Maximilian Schwarzmüller".
+Zawartość projektu wykorzystuje wszystkie zagadnienia zawarte w kursie dotyczące projektowania stron za pomocą frameworku Vue 3.
 
-### Compiles and hot-reloads for development
+#### Użyte technologie:
 
-```
-npm run serve
-```
+- Vue 3 - Composition API
+- Vue Router
+- Vuex
+- Css & HTML
+- Edamam API
+- Firebase
 
-### Compiles and minifies for production
+### Funkcjonalność strony:
+
+1. Wyszukiwarka przepisów
+
+- validacja danych wyszukiwania
+
+DO DOKOŃCZENIA....
+
+#### Komendy
 
 ```
 npm run build
+npm run serve
+npm install
 ```
 
-### Lints and fixes files
+### Przypisy
 
-```
-npm run lint
-```
+- Jakub Szklarski
+- EDAMAM
 
-### Customize configuration
+### Kontakt
 
-See [Configuration Reference](https://cli.vuejs.org/config/).
+jakubszklarski1@gmail.com

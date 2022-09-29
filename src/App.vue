@@ -131,8 +131,29 @@ html {
   font-family: "Roboto Slab", serif;
   color: var(--text-dark);
   font-size: 62.5%;
-  overflow-y: scroll;
-  overflow-x: hidden;
+}
+
+*::-webkit-scrollbar {
+  display: block;
+  width: 16px;
+}
+
+*::-webkit-scrollbar-button {
+  display: none;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: #00000000;
+}
+
+*::-webkit-scrollbar-track-piece {
+  background-color: #00000000;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #00000040;
+  border: 1px solid #ffffff40;
+  border-radius: 24px;
 }
 
 body {
@@ -156,8 +177,9 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  overflow-x: hidden; /* or any other value */
-  overflow-y: auto;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  overflow-y: overlay;
 }
 #wrapper {
   margin: 0;

@@ -51,6 +51,7 @@ export default {
       }
     });
 
+    /////////////////////////////////////////////////////////////////////// delete from fav
     const del = function (idd) {
       const index = recipes.value.findIndex((r) => r.id === idd);
       recipes.value.splice(index, 1);
@@ -62,7 +63,7 @@ export default {
       return store.getters["favourites/getFavourites"];
     });
 
-    //init
+    /////////////////////////////////////////////////////////////////////// init
     const fetchFavs = async function () {
       try {
         await store.dispatch("favourites/fetchFavourites");
