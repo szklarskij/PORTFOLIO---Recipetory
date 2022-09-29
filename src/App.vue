@@ -133,7 +133,7 @@ html {
   font-size: 62.5%;
 }
 
-*::-webkit-scrollbar {
+/* *::-webkit-scrollbar {
   display: block;
   width: 16px;
 }
@@ -154,7 +154,7 @@ html {
   background-color: #00000040;
   border: 1px solid #ffffff40;
   border-radius: 24px;
-}
+} */
 
 body {
   background-color: var(--text-light);
