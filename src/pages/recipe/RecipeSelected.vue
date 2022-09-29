@@ -537,64 +537,68 @@ export default {
     };
     /////////////////////////////////////////////////////////////////////// init
     const init = async function () {
-      if (recipes.length !== 0) {
-        thisRecipe = recipes.find((recipe) => recipe.id === route.params.id);
-
-        loadImage();
-      } else if (store.getters["recipe/getRecipe"]) {
-        thisRecipe = store.getters["recipe/getRecipe"];
+      thisRecipe = recipes.find((recipe) => recipe.id === route.params.id);
+      if (recipes.length !== 0 && thisRecipe) {
         loadImage();
       } else {
-        try {
-          const response = await fetch(
-            `https://api.edamam.com/api/recipes/v2/${route.params.id}?type=public&app_id=${EDAMAM_ID}&app_key=${EDAMAM_KEY}`
-          );
+        if (
+          store.getters["recipe/getRecipe"] &&
+          store.getters["recipe/getRecipe"].id === route.params.id
+        ) {
+          thisRecipe = store.getters["recipe/getRecipe"];
+          loadImage();
+        } else {
+          try {
+            const response = await fetch(
+              `https://api.edamam.com/api/recipes/v2/${route.params.id}?type=public&app_id=${EDAMAM_ID}&app_key=${EDAMAM_KEY}`
+            );
 
-          let filteredLabels = [];
+            let filteredLabels = [];
 
-          const data = await response.json();
-          if (!response.ok) {
-            let error;
-            if (response.status === 404) {
-              error = new Error("Wrong recipe id at url.");
-            } else {
-              error = new Error("Failed to fetch data from server.");
-            }
-
-            router.replace("/search");
-            throw error;
-          } else {
-            LABELS_ARR.forEach((label) => {
-              if (data.recipe.healthLabels.includes(label)) {
-                filteredLabels.push(label.toLowerCase());
+            const data = await response.json();
+            if (!response.ok) {
+              let error;
+              if (response.status === 404) {
+                error = new Error("Wrong recipe id at url.");
+              } else {
+                error = new Error("Failed to fetch data from server.");
               }
-            });
-            thisRecipe = {
-              id: route.params.id,
-              label: data.recipe.label,
-              image: data.recipe.image,
-              imageLarge: data.recipe.images.LARGE
-                ? data.recipe.images.LARGE.url
-                : data.recipe.image,
-              source: data.recipe.source,
-              calories: data.recipe.calories,
-              healthLabels: filteredLabels,
-              url: data.recipe.url,
-              ingredients: data.recipe.ingredients,
-              totalNutrients: data.recipe.totalNutrients,
-              totalTime: data.recipe.totalTime,
-              totalWeight: data.recipe.totalWeight,
-              servings: data.recipe.yield,
-            };
 
-            store.dispatch("recipe/setRecipe", thisRecipe);
+              router.replace("/search");
+              throw error;
+            } else {
+              LABELS_ARR.forEach((label) => {
+                if (data.recipe.healthLabels.includes(label)) {
+                  filteredLabels.push(label.toLowerCase());
+                }
+              });
+              thisRecipe = {
+                id: route.params.id,
+                label: data.recipe.label,
+                image: data.recipe.image,
+                imageLarge: data.recipe.images.LARGE
+                  ? data.recipe.images.LARGE.url
+                  : data.recipe.image,
+                source: data.recipe.source,
+                calories: data.recipe.calories,
+                healthLabels: filteredLabels,
+                url: data.recipe.url,
+                ingredients: data.recipe.ingredients,
+                totalNutrients: data.recipe.totalNutrients,
+                totalTime: data.recipe.totalTime,
+                totalWeight: data.recipe.totalWeight,
+                servings: data.recipe.yield,
+              };
 
-            loadImage();
+              store.dispatch("recipe/setRecipe", thisRecipe);
+
+              loadImage();
+            }
+          } catch (error) {
+            isLoading.value = false;
+            failedFetch.value = true;
+            store.dispatch("search/setError", error);
           }
-        } catch (error) {
-          isLoading.value = false;
-          failedFetch.value = true;
-          store.dispatch("search/setError", error);
         }
       }
       checkUserRating();
@@ -604,9 +608,13 @@ export default {
       try {
         servingsInput.value = thisRecipe.servings;
         const img = new Image();
-        img.src = thisRecipe.imageLarge;
+        if (thisRecipe.imageLarge) {
+          img.src = thisRecipe.imageLarge;
+        } else {
+          img.src = thisRecipe.image;
+        }
+
         img.onload = function () {
-          // store.dispatch('search/spinnerOff')
           isLoading.value = false;
         };
       } catch (error) {
