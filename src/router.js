@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-
 import RecipeStart from "./pages/search/RecipeStart.vue";
 import RecipeSelected from "./pages/recipe/RecipeSelected.vue";
 import RecipeResults from "./pages/search/RecipeResults.vue";
