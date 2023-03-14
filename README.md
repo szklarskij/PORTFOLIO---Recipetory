@@ -52,13 +52,23 @@ Strona jest responsywna.
   <img src="/src/screenshots/1.png" />
 </p>
 
-![Alt text](/src/screenshots/1.png?raw=true "Strona główna")
+- wyszukiwarka przepisów
 
-![Alt text](/src/screenshots/2.png?raw=true "Wyszukiwarka przepisów")
+<p align="center">
+  <img src="/src/screenshots/2.png" />
+</p>
 
-![Alt text](/src/screenshots/3.png?raw=true "Wybrany przepis")
+- wybrany przepis
 
-![Alt text](/src/screenshots/4.png?raw=true "Menu w wersji mobilnej")
+<p align="center">
+  <img src="/src/screenshots/3.png" />
+</p>
+
+- menu w wersji mobilnej
+
+<p align="center">
+  <img src="/src/screenshots/4.png" />
+</p>
 
 #### Komendy
 
