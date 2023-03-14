@@ -46,6 +46,12 @@ Strona jest responsywna.
 
 #### Screenshots
 
+- strona główna
+
+<p align="center">
+  <img src="/src/screenshots/1.png" />
+</p>
+
 ![Alt text](/src/screenshots/1.png?raw=true "Strona główna")
 
 ![Alt text](/src/screenshots/2.png?raw=true "Wyszukiwarka przepisów")
