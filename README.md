@@ -38,11 +38,18 @@ Zawartość projektu wykorzystuje wszystkie zagadnienia zawarte w kursie dotycz�
 
 3. Tworzenie konta i logowania w aplikacji
 
+- rejestracja użytkownika
 - walidacja danych użytkownika
-- funkcja autologowania oraz autowylogowywania
+- funkcja auto-logowania oraz auto-wylogowywania
 - bezpieczne przechowywanie haseł w usłudze Firebase
 
-Strona jest responsywna.
+4. Inne
+
+- przechowywanie stanu aplikacji w "store" (vuex)
+- użycie Vue Routera oraz zastosowanie "guard clause"
+- wykorzystanie dynamicznych komponentów
+- wykorzystanie innych funkcji Vue typu transition, teleport, keep-alive, props, injections
+- responsywność z urządzeniami mobilnymi
 
 #### Screenshots
 
